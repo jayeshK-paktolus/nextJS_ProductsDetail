@@ -31,7 +31,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
     >
       <aside
         aria-label="Sidebar"
-        className="mt-[50px] px-[15px] py-[5px]px-[15px] py-[5px] w-[20%] h-[93vh] flex border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 bg-[#F9FAFB]"
+        className="mt-[50px] px-[15px] py-[5px]px-[15px] py-[5px] w-[20%] h-[93vh] flex border border-gray-200 dark:border-gray-700 dark:bg-gray-800 bg-[#F9FAFB]"
       >
         <div className="flex flex-col w-full h-full">
           <div className="h-full py-4 overflow-y-auto">

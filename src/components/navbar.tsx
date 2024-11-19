@@ -3,6 +3,7 @@ import Close from "./icons/Close";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 export type NavbarProps = {
   toggleClose: (open: boolean) => void;
@@ -21,18 +22,19 @@ const Navbar = ({ open, toggleClose }: NavbarProps) => (
             {open ? <Close /> : <Bars />}
           </Button>
           <Link href="/" className="flex mr-4">
-            <img src="/vite.svg" className="mr-3 h-8" alt="Dashboard Logo" />
+            <Image
+              src="/vite.svg"
+              alt="Dashboard Logo"
+              className="mr-3"
+              width={32}
+              height={32}
+            />
             <span className="self-center text-2xl font-semibold  whites  pace-nowrap dark:text-white">
               Dashboard
             </span>
           </Link>
         </div>
         <div className="flex items-center lg:order-2">
-          {/* <Avatar
-            className="w-8 h-8"
-            src="https://picsum.photos/id/1025/150/150"
-            alt="user photo"
-          /> */}
           <Avatar className="w-6 h-6">
             <AvatarImage
               src="https://picsum.photos/id/1025/150/150"
