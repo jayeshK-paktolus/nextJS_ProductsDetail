@@ -1,3 +1,4 @@
+import { TrpcProvider } from "@/providers/trpc-provider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -28,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <TrpcProvider>{children}</TrpcProvider>
       </body>
     </html>
   );
