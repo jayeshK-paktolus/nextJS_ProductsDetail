@@ -1,3 +1,4 @@
+import { auth } from "@/app/api/auth/[...nextauth]/route";
 import axios from "axios";
 
 const backendInstance = axios.create({
@@ -7,6 +8,16 @@ const backendInstance = axios.create({
     "X-Api-Key": process.env.BACKEND_API_KEY,
   },
   withCredentials: true,
+});
+
+backendInstance.interceptors.request.use(async (config) => {
+  const session = await auth();
+
+  if (session?.accessToken) {
+    config.headers.Authorization = `Bearer ${session.accessToken}`;
+  }
+
+  return config;
 });
 
 export default backendInstance;
