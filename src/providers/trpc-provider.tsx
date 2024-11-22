@@ -1,13 +1,14 @@
 "use client";
 
-import { trpc } from "@/lib/trpc";
-import { getBaseUrl } from "@/lib/utils";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { PropsWithChildren, useState } from "react";
 
-export function TrpcProvider({ children }: PropsWithChildren) {
-  const [queryClient] = useState<QueryClient>(() => new QueryClient({}));
+import { getQueryClient, trpc } from "@/lib/trpc/client";
+import { getBaseUrl } from "@/lib/utils";
+
+export function TRPCProvider({ children }: Readonly<PropsWithChildren>) {
+  const queryClient = getQueryClient();
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [

@@ -1,11 +1,13 @@
+import { cache } from "react";
+
 import { auth } from "@/app/api/auth/[...nextauth]/route";
 
-export async function createContext() {
+export const createTRPCContext = cache(async () => {
   const session = await auth();
 
   return {
     session,
   };
-}
+});
 
-export type Context = Awaited<ReturnType<typeof createContext>>;
+export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
