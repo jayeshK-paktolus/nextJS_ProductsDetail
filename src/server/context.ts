@@ -10,4 +10,4 @@ export const createTRPCContext = cache(async () => {
   };
 });
 
-export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
+export type Context = typeof createTRPCContext;

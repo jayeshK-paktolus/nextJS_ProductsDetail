@@ -5,5 +5,9 @@ import { trpc } from "@/lib/trpc/server";
 export async function HelloServer() {
   const account = await trpc.users.me();
 
-  return <h1 className="text-xl">Hello from a server component, {account?.firstName}</h1>;
+  return (
+    <h1 className="text-xl">
+      Hello from a server component, {account?.firstName}
+    </h1>
+  );
 }
