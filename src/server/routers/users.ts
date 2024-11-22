@@ -1,9 +1,9 @@
 import backendInstance from "@/lib/backend-instance";
 import { HttpStatusCode } from "axios";
-import { publicProcedure, router } from "../trpc";
+import { privateProcedure, router } from "../trpc";
 
 export const usersRouter = router({
-  me: publicProcedure.query(async () => {
+  me: privateProcedure.query(async () => {
     try {
       const response = await backendInstance.get<{
         email: string;
@@ -20,8 +20,7 @@ export const usersRouter = router({
         firstName: response.data.firstName,
         lastName: response.data.lastName,
       };
-    } catch (error) {
-      console.error(error);
+    } catch {
       return null;
     }
   }),

@@ -12,9 +12,7 @@ export function TrpcProvider({ children }: PropsWithChildren) {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: (() => {
-            return `${getBaseUrl()}/api/trpc`;
-          })(),
+          url: `${getBaseUrl()}/api/trpc`,
         }),
       ],
     })

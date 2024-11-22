@@ -2,6 +2,8 @@
 
 import { trpc } from "@/lib/trpc";
 
+// NOTE: This is an example component.
+// TODO: Remove this example component.
 export function Welcome() {
   const { isFetching, data } = trpc.users.me.useQuery();
 
