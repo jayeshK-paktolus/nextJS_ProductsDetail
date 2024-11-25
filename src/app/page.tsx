@@ -1,11 +1,11 @@
-import { account } from "@/lib/data/account";
+import { HelloClient } from "@/components/hello-client";
+import { HelloServer } from "@/components/hello-server";
 
-export default async function Home() {
-  const user = await account();
-
+export default function Home() {
   return (
     <div className="grid place-content-center">
-      <h1 className="text-xl">Welcome, {user?.firstName}</h1>
+      <HelloServer />
+      <HelloClient />
     </div>
   );
 }
