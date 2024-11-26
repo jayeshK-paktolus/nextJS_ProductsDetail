@@ -46,6 +46,8 @@ export default function SignInPage() {
       await signIn("credentials", {
         email: data.email,
         password: data.password,
+        redirect: true,
+        callbackUrl: "/",
       });
     } catch (error) {}
   };
