@@ -18,6 +18,7 @@ import { SingInFormSchema } from "@/schemas/sign-in";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 function SubmitButton({ isLoading }: { isLoading: boolean }) {
   return (
@@ -104,6 +105,11 @@ export default function SignInPage() {
                   </FormItem>
                 )}
               />
+
+              <div className="w-fit text-sm underline">
+                <Link href="/auth/forgot-password">Forgot Password?</Link>
+              </div>
+
               <SubmitButton isLoading={isLoading} />
             </form>
           </Form>
