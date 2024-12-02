@@ -1,7 +1,10 @@
 import backendInstance from "@/lib/backend-instance";
 import { HttpStatusCode } from "axios";
 import { publicProcedure, router } from "../trpc";
-import { ForgotPasswordFormSchema } from "@/schemas/forgot-password";
+import {
+  ForgotPasswordFormSchema,
+  OtpFormSchema,
+} from "@/schemas/forgot-password";
 
 export const authRouter = router({
   sendOtp: publicProcedure
@@ -17,6 +20,22 @@ export const authRouter = router({
         return { success: true };
       } catch {
         return null;
+      }
+    }),
+  verifyOtp: publicProcedure
+    .input(OtpFormSchema)
+    .mutation(async ({ input }) => {
+      try {
+        const response = await backendInstance.post("/auth/verify-otp", {
+          email: input.email,
+          otp: input.otp,
+        });
+
+        if (response.status !== HttpStatusCode.Ok) return null;
+
+        return { success: true };
+      } catch {
+        throw new Error("otp verification failed.");
       }
     }),
 });
