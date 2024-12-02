@@ -16,7 +16,7 @@ export default function Layout({ children }: LayoutProps) {
       <Navbar open={isOpen} toggleClose={setIsOpen} />
       <div className="flex">
         <Sidebar open={isOpen} onClose={handleClose} />
-        <main className="relative overflow-y-auto p-4 md:ml-64 h-auto pt-20 bg-gray-50 dark:bg-gray-900">
+        <main className="relative overflow-y-auto p-4 flex-1 md:ml-64 h-auto pt-20 bg-gray-50 dark:bg-gray-900">
           {children}
         </main>
       </div>
