@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -16,10 +17,12 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -29,6 +32,7 @@ import { OtpFormSchema } from "@/schemas/forgot-password";
 import { trpc } from "@/lib/trpc/client";
 
 const VerifyOtpForm = () => {
+  const [isErrorWhileSubmitting, setIsErrorWhileSubmitting] = useState(false);
   const router = useRouter();
   const params = useSearchParams();
   const persistedEmail = params.get("email");
@@ -42,11 +46,14 @@ const VerifyOtpForm = () => {
   >({
     onSuccess: () =>
       router.push(`/auth/reset-password?email=${email}&otp=${otp}`),
+    onError: () => setIsErrorWhileSubmitting(true),
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof OtpFormSchema>> = (data) => {
     mutate({ email: data.email, otp: data.otp });
   };
+
+  const handleFocus = () => setIsErrorWhileSubmitting(false);
 
   return (
     <section className="w-full h-screen  flex-xy-center">
@@ -59,6 +66,12 @@ const VerifyOtpForm = () => {
         </CardHeader>
 
         <CardContent>
+          {isErrorWhileSubmitting && (
+            <Alert variant="destructive" className="mb-2">
+              <AlertDescription>Invalid code.</AlertDescription>
+            </Alert>
+          )}
+
           <Form {...form}>
             <form id="otp-form" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
@@ -66,8 +79,13 @@ const VerifyOtpForm = () => {
                 name="otp"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>One Time Password</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="123456" />
+                      <Input
+                        {...field}
+                        placeholder="123456"
+                        onFocus={handleFocus}
+                      />
                     </FormControl>
                     <FormMessage className="text-destructive text-xs" />
                   </FormItem>
