@@ -2,7 +2,7 @@ import backendInstance from "@/lib/backend-instance";
 import { HttpStatusCode } from "axios";
 import { privateProcedure, router } from "../trpc";
 import { z } from "zod";
-import { accountFormSchema } from "@/schemas/account";
+import { UpdateAccountFormSchema } from "@/schemas/account";
 
 export const usersRouter = router({
   me: privateProcedure.query(async () => {
@@ -12,7 +12,6 @@ export const usersRouter = router({
         firstName: string;
         lastName: string;
       }>("/users/me");
-
       if (response.status !== HttpStatusCode.Ok) {
         return null;
       }
@@ -29,19 +28,17 @@ export const usersRouter = router({
 
 
   updateAccount: privateProcedure
-    .input(accountFormSchema) 
-    .mutation(async ({ input }: { input: z.infer<typeof accountFormSchema> }) => {
+    .input(UpdateAccountFormSchema) 
+    .mutation(async ({ input }: { input: z.infer<typeof UpdateAccountFormSchema> }) => {
       try {  
         const response = await backendInstance.patch<{
           email: string;
           firstName: string;
           lastName: string;
         }>("/users/me", input); 
-
         if (response.status !== HttpStatusCode.Ok) {
           return null;
         }
-
         return {
           email: response.data.email,
           firstName: response.data.firstName,

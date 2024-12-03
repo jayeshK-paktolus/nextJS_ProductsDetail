@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,10 +13,10 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { changePasswordSchema } from "@/schemas/account";
+import { ChangeAccountPasswordFromSchema } from "@/schemas/account";
 import { PasswordInput } from "@/components/ui/password-input";
 
-type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
+type ChangePasswordFormValues = z.infer<typeof ChangeAccountPasswordFromSchema>;
 
 const ChangePasswordForm = () => {
   const {
@@ -23,7 +24,7 @@ const ChangePasswordForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<ChangePasswordFormValues>({
-    resolver: zodResolver(changePasswordSchema),
+    resolver: zodResolver(ChangeAccountPasswordFromSchema),
   });
 
   const onSubmit = (data: ChangePasswordFormValues) => {

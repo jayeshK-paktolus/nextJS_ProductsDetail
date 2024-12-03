@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,10 +13,10 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { accountFormSchema } from "@/schemas/account";
+import { UpdateAccountFormSchema } from "@/schemas/account";
 import { trpc } from "@/lib/trpc/client"; // Assuming you're using trpc for API requests
 
-type AccountFormValues = z.infer<typeof accountFormSchema>;
+type AccountFormValues = z.infer<typeof UpdateAccountFormSchema>;
 type AccountFormProps = { data: AccountFormValues };
 
 const AccountForm = ({ data }: AccountFormProps) => {
@@ -25,7 +26,7 @@ const AccountForm = ({ data }: AccountFormProps) => {
     formState: { errors },
     reset,
   } = useForm<AccountFormValues>({
-    resolver: zodResolver(accountFormSchema),
+    resolver: zodResolver(UpdateAccountFormSchema),
     defaultValues: data,
   });
 

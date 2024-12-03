@@ -1,13 +1,13 @@
-"use client";
+//"use client";
 
-import ChangePasswordForm from "./_components/change-password-form";
+import { trpc } from "@/lib/trpc/server";
 import AccountForm from "./_components/account-form";
-import { trpc } from "@/lib/trpc/client";
+import ChangePasswordForm from "./_components/change-password-form";
 
-export default function AccountPage() {
-  const { isFetching, data } = trpc.users.me.useQuery();
+export default async function AccountPage() {
+  const data = await trpc.users.me();
 
-  if (isFetching || !data) {
+  if (!data) {
     return <div>Loading...</div>;
   }
 
