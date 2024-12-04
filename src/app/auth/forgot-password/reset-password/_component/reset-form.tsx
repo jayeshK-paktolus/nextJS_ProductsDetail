@@ -1,0 +1,194 @@
+"use client";
+
+import { useState, type ChangeEvent } from "react";
+
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+
+import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { ResetPasswordSchema } from "@/schemas/forgot-password";
+import { trpc } from "@/lib/trpc/client";
+import { estimatePasswordStrength } from "@/lib/utils";
+
+const ResetForm = () => {
+  const params = useSearchParams();
+  const persistedEmail = params.get("email");
+  const persistedOtp = params.get("otp");
+  const router = useRouter();
+  const form = useForm({
+    resolver: zodResolver(ResetPasswordSchema),
+    defaultValues: {
+      email: persistedEmail || "",
+      otp: persistedOtp || "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+  const { mutate, isPending } = trpc.auth.resetPassword.useMutation<
+    z.infer<typeof ResetPasswordSchema>
+  >({ onSuccess: () => router.push("/auth/sign-in") });
+  const [passwordStrength, setPasswordStrength] = useState({
+    strengthInWord: "Very Weak",
+    strengthInNumber: 0,
+  });
+  const [isPasswordMasked, setIsPasswordMasked] = useState(true);
+
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const strength = estimatePasswordStrength(event.target.value);
+
+    switch (strength) {
+      case null:
+        setPasswordStrength({
+          strengthInWord: "Very Weak",
+          strengthInNumber: 0,
+        });
+        break;
+      case "Very Weak":
+        setPasswordStrength({
+          strengthInWord: "Very Weak",
+          strengthInNumber: 25,
+        });
+        break;
+      case "Weak":
+        setPasswordStrength({ strengthInWord: "Weak", strengthInNumber: 50 });
+        break;
+      case "Medium":
+        setPasswordStrength({ strengthInWord: "Medium", strengthInNumber: 75 });
+        break;
+      case "Strong":
+        setPasswordStrength({
+          strengthInWord: "Strong",
+          strengthInNumber: 100,
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handlePasswordMask = () =>
+    setIsPasswordMasked((prevState) => !prevState);
+
+  const onSubmit: SubmitHandler<z.infer<typeof ResetPasswordSchema>> = (
+    data
+  ) => {
+    mutate({
+      email: data.email,
+      otp: data.otp,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    });
+  };
+
+  return (
+    <section className="w-full h-screen  flex-xy-center">
+      <Card className="w-11/12 md:w-80">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl">Reset Password</CardTitle>
+          <CardDescription>Please enter new password</CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <Form {...form}>
+            <form id="reset-form" onSubmit={form.handleSubmit(onSubmit)}>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="mb-2">
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type={isPasswordMasked ? "password" : "text"}
+                          placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
+                          onChange={(event) => {
+                            field.onChange(event);
+                            handlePasswordChange(event);
+                          }}
+                        />
+                        <Button
+                          className="w-fit h-fit hover:bg-transparent  absolute top-2.5 right-3"
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={handlePasswordMask}
+                        >
+                          {isPasswordMasked ? <EyeOpenIcon /> : <EyeNoneIcon />}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage className="text-destructive text-xs" />
+                  </FormItem>
+                )}
+              />
+              <Label>
+                Password strength is: {passwordStrength.strengthInWord}
+              </Label>
+              <Progress
+                className="h-3 my-2"
+                value={passwordStrength.strengthInNumber}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-destructive text-xs" />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </CardContent>
+
+        <CardFooter>
+          <Button disabled={isPending} type="submit" form="reset-form">
+            Reset
+          </Button>
+
+          <Button variant="link" type="button">
+            <Link href="/auth/sign-in">Return to Sign in</Link>
+          </Button>
+        </CardFooter>
+      </Card>
+    </section>
+  );
+};
+
+export default ResetForm;

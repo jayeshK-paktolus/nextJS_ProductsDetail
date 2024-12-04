@@ -45,7 +45,9 @@ const VerifyOtpForm = () => {
     z.infer<typeof OtpFormSchema>
   >({
     onSuccess: () =>
-      router.push(`/auth/reset-password?email=${email}&otp=${otp}`),
+      router.push(
+        `/auth/forgot-password/reset-password?email=${email}&otp=${otp}`
+      ),
     onError: () => setIsErrorWhileSubmitting(true),
   });
 

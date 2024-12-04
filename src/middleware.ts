@@ -9,10 +9,17 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith("/auth")) {
     const page = pathname.split("/").at(-1);
     const email = searchParams.get("email");
+    const otp = searchParams.get("otp");
 
-    if (page === "verify" && !email) {
+    if ((page === "verify" || page === "reset-password") && !email) {
       return NextResponse.rewrite(
         new URL("/auth/forgot-password", request.url)
+      );
+    }
+
+    if (page === "reset-password" && !otp) {
+      return NextResponse.rewrite(
+        new URL(`/auth/forgot-password/verify?email=${email}`, request.url)
       );
     }
   }
