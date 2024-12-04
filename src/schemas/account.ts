@@ -11,13 +11,13 @@ export const UpdateAccountFormSchema = z.object({
 
 export const ChangeAccountPasswordFromSchema = z.object({
   oldPassword: z.string().min(6, "Old password must be at least 6 characters long"),
-  newPassword: z
+  password: z
     .string()
     .min(6, "New password must be at least 6 characters long")
     .regex(/[A-Z]/, "New password must contain at least one uppercase letter")
     .regex(/\d/, "New password must contain at least one number"),
   confirmPassword: z.string().min(6, "Confirm password must match the new password"),
-}).refine((data) => data.newPassword === data.confirmPassword, {
+}).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
 });

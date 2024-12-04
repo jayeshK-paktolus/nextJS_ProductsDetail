@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -15,6 +15,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ChangeAccountPasswordFromSchema } from "@/schemas/account";
 import { PasswordInput } from "@/components/ui/password-input";
+import { trpc } from "@/lib/trpc/client";
+import { signOut } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 type ChangePasswordFormValues = z.infer<typeof ChangeAccountPasswordFromSchema>;
 
@@ -26,10 +29,35 @@ const ChangePasswordForm = () => {
   } = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(ChangeAccountPasswordFromSchema),
   });
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = (data: ChangePasswordFormValues) => {
-    // Todo add functionality
-    console.log("Password Change Data:", data); // Remove this after implementing functionality
+  const mutation = trpc.users.changePassword.useMutation();
+  const onSubmit = async (data: ChangePasswordFormValues) => {
+    try {
+      setLoading(true);
+      await mutation.mutateAsync(data);
+      toast({
+        title: "Success",
+        description: "Your password was changed successfully.",
+        variant: "success",
+        duration: 2000,
+      });
+
+      setTimeout(() => {
+        signOut({ callbackUrl: "/auth/sign-in" });
+      }, 2000);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,6 +73,7 @@ const ChangePasswordForm = () => {
               <PasswordInput
                 id="oldPassword"
                 placeholder="Enter old password"
+                disabled={loading}
                 {...register("oldPassword")}
               />
               {errors.oldPassword && (
@@ -54,15 +83,16 @@ const ChangePasswordForm = () => {
               )}
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="newPassword">New Password</Label>
+              <Label htmlFor="password">New Password</Label>
               <PasswordInput
-                id="newPassword"
+                id="password"
                 placeholder="Enter new password"
-                {...register("newPassword")}
+                disabled={loading}
+                {...register("password")}
               />
-              {errors.newPassword && (
+              {errors.password && (
                 <p className="text-red-500 text-xs">
-                  {errors.newPassword.message}
+                  {errors.password.message}
                 </p>
               )}
             </div>
@@ -71,6 +101,7 @@ const ChangePasswordForm = () => {
               <PasswordInput
                 id="confirmPassword"
                 placeholder="Confirm password"
+                disabled={loading}
                 {...register("confirmPassword")}
               />
               {errors.confirmPassword && (
@@ -81,7 +112,13 @@ const ChangePasswordForm = () => {
             </div>
           </div>
           <CardFooter className="flex justify-start pl-0 pt-3 mt-5">
-            <Button type="submit">Change Password</Button>
+            <Button
+              type="submit"
+              disabled={loading}
+              className={`btn ${loading ? "btn-disabled" : "btn-primary"}`}
+            >
+              {loading ? "Updating..." : "Change Password"}
+            </Button>
           </CardFooter>
         </form>
       </CardContent>
