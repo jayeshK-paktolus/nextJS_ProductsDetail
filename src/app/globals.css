@@ -78,6 +78,12 @@ body {
 }
 
 @layer utilities {
+  /* elements */
+  .error-message {
+    @apply text-destructive text-xs;
+  }
+
+  /* layout */
   .flex-xy-center {
     @apply flex justify-center items-center;
   }

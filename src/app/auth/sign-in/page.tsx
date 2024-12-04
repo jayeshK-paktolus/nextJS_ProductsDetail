@@ -106,9 +106,9 @@ export default function SignInPage() {
                 )}
               />
 
-              <div className="w-fit text-sm underline">
+              <Button variant="link" type="button" className="pl-0">
                 <Link href="/auth/forgot-password">Forgot Password?</Link>
-              </div>
+              </Button>
 
               <SubmitButton isLoading={isLoading} />
             </form>
