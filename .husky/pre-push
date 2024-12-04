@@ -13,3 +13,4 @@ if [ "$branch" = "develop" ]; then
 fi
 
 pnpm lint:fix
+pnpm test
