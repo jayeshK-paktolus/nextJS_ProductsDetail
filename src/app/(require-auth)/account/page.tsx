@@ -1,5 +1,3 @@
-//"use client";
-
 import { trpc } from "@/lib/trpc/server";
 import AccountForm from "./_components/account-form";
 import ChangePasswordForm from "./_components/change-password-form";
