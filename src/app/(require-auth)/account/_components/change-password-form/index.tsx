@@ -42,10 +42,7 @@ const ChangePasswordForm = () => {
         variant: "success",
         duration: 2000,
       });
-
-      setTimeout(() => {
-        signOut({ callbackUrl: "/auth/sign-in" });
-      }, 2000);
+      signOut({ callbackUrl: "/auth/sign-in" });
     } catch (error) {
       toast({
         title: "Error",
