@@ -60,7 +60,7 @@ export default function SignInPage() {
       <Card className="pt-2 pb-2 border border-gray-200  min-w-[300px] max-w-[500px] mx-auto sm:min-w-[450px]">
         <CardHeader>
           <CardTitle className="text-2xl pt-0 mb-2 font-normal justify-center flex">
-            Login
+            <h1>Login</h1>
           </CardTitle>
           <Separator className="bg-gray-400" />
         </CardHeader>
