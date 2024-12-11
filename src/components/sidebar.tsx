@@ -1,12 +1,6 @@
-import Link from "next/link";
 import { ChartPie, SquareChartGantt, UserRoundCog } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import Link from "next/link";
+import LanguageSwitcher from "./language-switcher";
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   return (
@@ -21,7 +15,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
             <li className="hover:bg-gray-100 rounded ">
               <Link
                 className="flex items-center p-2 text-gray-800 rounded-lg mb-[-10px] font-bold hover:text-gray-950"
-                href="/"
+                href="/dashboard"
               >
                 <ChartPie className="text-gray-500 transition-colors duration-[75ms] m-2 hover:text-gray-950 " />
                 Dashboard
@@ -38,24 +32,14 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
             </li>
           </ul>
         </div>
-        <div className="absolute bottom-0 left-0 w-full p-4 bg-white flex justify-center">
+        <div className="absolute bottom-0 left-0 w-full p-4 bg-white flex justify-evenly items-center">
           <Link
             className="inline-flex justify-center p-2 rounded-sm text-gray-500"
-            href="/user/me"
+            href="/account"
           >
             <UserRoundCog className="h-6" />
           </Link>
-          <div>
-            <Select>
-              <SelectTrigger className="max-w-[5rem] ml-5 border border-gray-300 rounded-sm">
-                <SelectValue placeholder="en" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">en</SelectItem>
-                <SelectItem value="es">es</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <LanguageSwitcher />
         </div>
       </aside>
     </div>
