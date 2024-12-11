@@ -6,7 +6,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "./ui/select";
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   return (
@@ -18,7 +18,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
       <aside>
         <div className="h-full pt-4 pb-4 m-[20px]">
           <ul>
-            <li>
+            <li className="hover:bg-gray-100 rounded">
               <Link
                 className="flex items-center p-2 text-gray-800 rounded-lg mb-[-10px] font-bold"
                 href="/"
@@ -27,7 +27,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                 Dashboard
               </Link>
             </li>
-            <li>
+            <li className="hover:bg-gray-100 rounded">
               <Link
                 className="flex items-center p-2 text-gray-800 rounded-lg mb-[-10px] font-bold"
                 href="/products"
