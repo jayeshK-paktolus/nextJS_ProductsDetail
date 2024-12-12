@@ -1,118 +1,165 @@
+import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom";
 import ChangePasswordForm from ".";
+import { trpc } from "@/lib/trpc/client";
+import { signOut } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
+
+jest.mock("@/lib/trpc/client", () => ({
+  trpc: {
+    users: {
+      changePassword: {
+        useMutation: jest.fn(),
+      },
+    },
+  },
+}));
+
+jest.mock("next-auth/react", () => ({
+  signOut: jest.fn(),
+}));
+
+jest.mock("@/hooks/use-toast", () => ({
+  toast: jest.fn(),
+}));
 
 describe("ChangePasswordForm", () => {
+  const mockMutateAsync = jest.fn();
+  const mockUseMutation = trpc.users.changePassword.useMutation as jest.Mock;
+
   beforeEach(() => {
-    jest.clearAllMocks();
+    mockUseMutation.mockReturnValue({
+      mutateAsync: mockMutateAsync,
+    });
+    (signOut as jest.Mock).mockClear();
+    (toast as jest.Mock).mockClear();
+    mockMutateAsync.mockClear();
   });
 
-  it("should show validation errors when passwords dont match", async () => {
+  const fillPasswordForm = async (
+    oldPassword = "oldPassword123",
+    newPassword = "newPassword456",
+    confirmPassword = "newPassword456"
+  ) => {
+    const oldPasswordInput = screen.getByPlaceholderText("Enter old password");
+    const newPasswordInput = screen.getByPlaceholderText("Enter new password");
+    const confirmPasswordInput =
+      screen.getByPlaceholderText("Confirm password");
+
+    await userEvent.type(oldPasswordInput, oldPassword);
+    await userEvent.type(newPasswordInput, newPassword);
+    await userEvent.type(confirmPasswordInput, confirmPassword);
+
+    const submitButton = screen.getByText("Change Password");
+    await userEvent.click(submitButton);
+  };
+
+  test("renders form correctly", () => {
     render(<ChangePasswordForm />);
 
-    const oldPasswordInput = screen.getByLabelText(/old password/i);
-    const newPasswordInput = screen.getByLabelText(/new password/i);
-    const confirmPasswordInput = screen.getByLabelText(/confirm password/i);
+    expect(screen.getByText("Security")).toBeInTheDocument();
+    expect(screen.getByLabelText("Old Password")).toBeInTheDocument();
+    expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+    expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
+    expect(screen.getByText("Change Password")).toBeInTheDocument();
+  });
 
-    const user = userEvent.setup();
+  test("submits form successfully", async () => {
+    mockMutateAsync.mockResolvedValue({});
 
-    await user.type(oldPasswordInput, "OldPass123!");
-    await user.type(newPasswordInput, "NewPass123!");
-    await user.type(confirmPasswordInput, "DifferentPass123!");
+    render(<ChangePasswordForm />);
 
-    const submitButton = screen.getByText(/change password/i);
-    await user.click(submitButton);
+    await fillPasswordForm();
 
     await waitFor(() => {
-      expect(screen.getByText(/Passwords do not match/i)).toBeInTheDocument();
+      expect(mockMutateAsync).toHaveBeenCalledWith({
+        oldPassword: "oldPassword123",
+        password: "newPassword456",
+        confirmPassword: "newPassword456",
+      });
+
+      expect(toast).toHaveBeenCalledWith({
+        title: "Success",
+        description: "Your password was changed successfully.",
+        variant: "success",
+        duration: 2000,
+      });
+
+      expect(signOut).toHaveBeenCalledWith({ callbackUrl: "/auth/sign-in" });
     });
   });
 
-  it("should show password requirements validation error", async () => {
+  test("handles submission error", async () => {
+    const errorMessage = "Password change failed";
+    mockMutateAsync.mockRejectedValue(new Error(errorMessage));
+
     render(<ChangePasswordForm />);
 
-    const oldPasswordInput = screen.getByLabelText(/old password/i);
-    const newPasswordInput = screen.getByLabelText(/new password/i);
-    const confirmPasswordInput = screen.getByLabelText(/confirm password/i);
+    await fillPasswordForm();
 
-    const user = userEvent.setup();
+    await waitFor(() => {
+      expect(toast).toHaveBeenCalledWith({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
 
-    await user.type(oldPasswordInput, "OldPass123!");
-    await user.type(newPasswordInput, "weak");
-    await user.type(confirmPasswordInput, "weak");
+      expect(signOut).not.toHaveBeenCalled();
+    });
+  });
 
-    const submitButton = screen.getByText(/change password/i);
-    await user.click(submitButton);
+  test("disables submit button during loading", async () => {
+    const loadingPromise = new Promise<void>(() => {});
+    mockMutateAsync.mockImplementation(() => loadingPromise);
+
+    render(<ChangePasswordForm />);
+
+    await fillPasswordForm();
+
+    const submitButton = screen.getByText("Updating...");
+    expect(submitButton).toBeDisabled();
+  });
+
+  test("shows validation errors", async () => {
+    render(<ChangePasswordForm />);
+
+    const submitButton = screen.getByText("Change Password");
+    await userEvent.click(submitButton);
 
     await waitFor(() => {
       expect(
+        screen.getByText(/Old password must be at least 6 characters long/i)
+      ).toBeInTheDocument();
+      expect(
         screen.getByText(/New password must be at least 6 characters long/i)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Confirm password must match the new password/i)
       ).toBeInTheDocument();
     });
   });
 
-  it("should handle successful form submission with valid data", async () => {
-    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+  test("prevents submission when passwords do not match", async () => {
+    mockMutateAsync.mockResolvedValue({});
 
     render(<ChangePasswordForm />);
 
-    const validPasswords = {
-      oldPassword: "OldPass123!",
-      newPassword: "NewPass123!",
-      confirmPassword: "NewPass123!",
-    };
+    const oldPasswordInput = screen.getByPlaceholderText("Enter old password");
+    const newPasswordInput = screen.getByPlaceholderText("Enter new password");
+    const confirmPasswordInput =
+      screen.getByPlaceholderText("Confirm password");
 
-    const user = userEvent.setup();
+    await userEvent.type(oldPasswordInput, "oldPassword123");
+    await userEvent.type(newPasswordInput, "newPassword456");
+    await userEvent.type(confirmPasswordInput, "differentPassword789");
 
-    await user.type(
-      screen.getByLabelText(/old password/i),
-      validPasswords.oldPassword
-    );
-    await user.type(
-      screen.getByLabelText(/new password/i),
-      validPasswords.newPassword
-    );
-    await user.type(
-      screen.getByLabelText(/confirm password/i),
-      validPasswords.confirmPassword
-    );
-
-    const submitButton = screen.getByText(/change password/i);
-    await user.click(submitButton);
+    const submitButton = screen.getByText("Change Password");
+    await userEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Password Change Data:",
-        validPasswords
-      );
-    });
-
-    consoleSpy.mockRestore();
-  });
-
-  it("should toggle password visibility when clicking the eye icon", async () => {
-    render(<ChangePasswordForm />);
-
-    const passwordInput = screen.getByLabelText(/new password/i);
-    expect(passwordInput).toHaveAttribute("type", "password");
-
-    const toggleButton = screen.getAllByRole("button", {
-      name: /Show password/i,
-    })[1];
-
-    const user = userEvent.setup();
-
-    await user.click(toggleButton);
-
-    await waitFor(() => {
-      expect(passwordInput).toHaveAttribute("type", "text");
-    });
-
-    await user.click(toggleButton);
-
-    await waitFor(() => {
-      expect(passwordInput).toHaveAttribute("type", "password");
+      expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument();
+      expect(mockMutateAsync).not.toHaveBeenCalled();
     });
   });
 });

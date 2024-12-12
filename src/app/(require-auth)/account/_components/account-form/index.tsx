@@ -52,7 +52,7 @@ const AccountForm = ({ data }: AccountFormProps) => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid w-full items-center grid-cols-2 gap-6">
+          <div className="grid w-full items-center grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="flex flex-col space-y-2">
               <Label htmlFor="firstName">First Name</Label>
               <Input

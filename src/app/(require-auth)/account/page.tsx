@@ -10,8 +10,8 @@ export default async function AccountPage() {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-4 justify-center">
-      <div className="col-span-2">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 justify-center">
+      <div className="col-span-1 md:col-span-2">
         <AccountForm data={data} />
       </div>
       <div>
