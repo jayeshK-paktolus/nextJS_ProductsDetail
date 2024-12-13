@@ -15,6 +15,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ChangeAccountPasswordFromSchema } from "@/schemas/account";
 import { PasswordInput } from "@/components/ui/password-input";
+import { trpc } from "@/lib/trpc/client";
+import { signOut } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 type ChangePasswordFormValues = z.infer<typeof ChangeAccountPasswordFromSchema>;
 
@@ -27,10 +30,34 @@ const ChangePasswordForm = () => {
     resolver: zodResolver(ChangeAccountPasswordFromSchema),
   });
 
-  const onSubmit = (data: ChangePasswordFormValues) => {
-    // Todo add functionality
-    console.log("Password Change Data:", data); // Remove this after implementing functionality
+  const mutation = trpc.users.changePassword.useMutation();
+
+  const onSubmit = async (data: ChangePasswordFormValues) => {
+    try {
+      await mutation.mutateAsync(data);
+
+      toast({
+        title: "Success",
+        description: "Your password was changed successfully.",
+        variant: "success",
+        duration: 2000,
+        onClose: () => {
+          signOut({ callbackUrl: "/auth/sign-in" });
+        },
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    }
   };
+
+  const isLoading = mutation.isPending;
 
   return (
     <Card className="w-full">
@@ -45,6 +72,7 @@ const ChangePasswordForm = () => {
               <PasswordInput
                 id="oldPassword"
                 placeholder="Enter old password"
+                disabled={isLoading}
                 {...register("oldPassword")}
               />
               {errors.oldPassword && (
@@ -54,15 +82,16 @@ const ChangePasswordForm = () => {
               )}
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="newPassword">New Password</Label>
+              <Label htmlFor="password">New Password</Label>
               <PasswordInput
-                id="newPassword"
+                id="password"
                 placeholder="Enter new password"
-                {...register("newPassword")}
+                disabled={isLoading}
+                {...register("password")}
               />
-              {errors.newPassword && (
+              {errors.password && (
                 <p className="text-red-500 text-xs">
-                  {errors.newPassword.message}
+                  {errors.password.message}
                 </p>
               )}
             </div>
@@ -71,6 +100,7 @@ const ChangePasswordForm = () => {
               <PasswordInput
                 id="confirmPassword"
                 placeholder="Confirm password"
+                disabled={isLoading}
                 {...register("confirmPassword")}
               />
               {errors.confirmPassword && (
@@ -81,7 +111,13 @@ const ChangePasswordForm = () => {
             </div>
           </div>
           <CardFooter className="flex justify-start pl-0 pt-3 mt-5">
-            <Button type="submit">Change Password</Button>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className={`btn ${isLoading ? "btn-disabled" : "btn-primary"}`}
+            >
+              {isLoading ? "Updating..." : "Change Password"}
+            </Button>
           </CardFooter>
         </form>
       </CardContent>
