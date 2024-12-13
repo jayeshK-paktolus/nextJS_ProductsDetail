@@ -140,9 +140,13 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, "id">
+// type Toast = Omit<ToasterToast, "id">
 
-function toast({ ...props }: Toast) {
+type Toast = Omit<ToasterToast, "id"> & {
+  onClose?: () => void;  // Add this line
+}
+
+function toast({ onClose, ...props }: Toast) {
   const id = genId()
 
   const update = (props: ToasterToast) =>
@@ -159,7 +163,10 @@ function toast({ ...props }: Toast) {
       id,
       open: true,
       onOpenChange: (open:boolean) => {
-        if (!open) dismiss()
+        if (!open){
+          dismiss()
+          onClose?.()
+        } 
       },
     },
   })

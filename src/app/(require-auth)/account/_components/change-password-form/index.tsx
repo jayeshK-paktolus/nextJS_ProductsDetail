@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -29,20 +29,22 @@ const ChangePasswordForm = () => {
   } = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(ChangeAccountPasswordFromSchema),
   });
-  const [loading, setLoading] = useState(false);
 
   const mutation = trpc.users.changePassword.useMutation();
+
   const onSubmit = async (data: ChangePasswordFormValues) => {
     try {
-      setLoading(true);
       await mutation.mutateAsync(data);
+
       toast({
         title: "Success",
         description: "Your password was changed successfully.",
         variant: "success",
         duration: 2000,
+        onClose: () => {
+          signOut({ callbackUrl: "/auth/sign-in" });
+        },
       });
-      signOut({ callbackUrl: "/auth/sign-in" });
     } catch (error) {
       toast({
         title: "Error",
@@ -52,10 +54,10 @@ const ChangePasswordForm = () => {
             : "An unexpected error occurred.",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   };
+
+  const isLoading = mutation.isPending;
 
   return (
     <Card className="w-full">
@@ -70,7 +72,7 @@ const ChangePasswordForm = () => {
               <PasswordInput
                 id="oldPassword"
                 placeholder="Enter old password"
-                disabled={loading}
+                disabled={isLoading}
                 {...register("oldPassword")}
               />
               {errors.oldPassword && (
@@ -84,7 +86,7 @@ const ChangePasswordForm = () => {
               <PasswordInput
                 id="password"
                 placeholder="Enter new password"
-                disabled={loading}
+                disabled={isLoading}
                 {...register("password")}
               />
               {errors.password && (
@@ -98,7 +100,7 @@ const ChangePasswordForm = () => {
               <PasswordInput
                 id="confirmPassword"
                 placeholder="Confirm password"
-                disabled={loading}
+                disabled={isLoading}
                 {...register("confirmPassword")}
               />
               {errors.confirmPassword && (
@@ -111,10 +113,10 @@ const ChangePasswordForm = () => {
           <CardFooter className="flex justify-start pl-0 pt-3 mt-5">
             <Button
               type="submit"
-              disabled={loading}
-              className={`btn ${loading ? "btn-disabled" : "btn-primary"}`}
+              disabled={isLoading}
+              className={`btn ${isLoading ? "btn-disabled" : "btn-primary"}`}
             >
-              {loading ? "Updating..." : "Change Password"}
+              {isLoading ? "Updating..." : "Change Password"}
             </Button>
           </CardFooter>
         </form>

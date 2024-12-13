@@ -14,9 +14,7 @@ export default async function AccountPage() {
       <div className="col-span-1 md:col-span-2">
         <AccountForm data={data} />
       </div>
-      <div>
-        <ChangePasswordForm />
-      </div>
+      <ChangePasswordForm />
     </div>
   );
 }
