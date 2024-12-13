@@ -84,9 +84,14 @@ describe("ChangePasswordForm", () => {
         description: "Your password was changed successfully.",
         variant: "success",
         duration: 2000,
+        onClose: expect.any(Function),
       });
 
-      expect(signOut).toHaveBeenCalledWith({ callbackUrl: "/auth/sign-in" });
+      const toastCall = (toast as jest.Mock).mock.calls[0][0];
+      if (toastCall.onClose) {
+        toastCall.onClose();
+        expect(signOut).toHaveBeenCalledWith({ callbackUrl: "/auth/sign-in" });
+      }
     });
   });
 
@@ -110,15 +115,19 @@ describe("ChangePasswordForm", () => {
   });
 
   test("disables submit button during loading", async () => {
-    const loadingPromise = new Promise<void>(() => {});
-    mockMutateAsync.mockImplementation(() => loadingPromise);
+    mockUseMutation.mockReturnValue({
+      mutateAsync: mockMutateAsync,
+      isPending: true,
+    });
 
     render(<ChangePasswordForm />);
 
-    await fillPasswordForm();
+    const submitButton = screen.getByRole("button", {
+      name: /updating\.\.\./i,
+    });
 
-    const submitButton = screen.getByText("Updating...");
     expect(submitButton).toBeDisabled();
+    expect(submitButton).toHaveTextContent("Updating...");
   });
 
   test("shows validation errors", async () => {
