@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { UpdateAccountFormSchema } from "@/schemas/account";
 import { trpc } from "@/lib/trpc/client"; // Assuming you're using trpc for API requests
+import { signOut } from "next-auth/react";
 
 type AccountFormValues = z.infer<typeof UpdateAccountFormSchema>;
 type AccountFormProps = { data: AccountFormValues };
@@ -43,6 +44,12 @@ const AccountForm = ({ data }: AccountFormProps) => {
     } catch (error) {
       console.error("Error updating account:", error);
     }
+  };
+
+  const handleSignOut = () => {
+    signOut({
+      callbackUrl: "/auth/sign-in",
+    });
   };
 
   return (
@@ -96,6 +103,9 @@ const AccountForm = ({ data }: AccountFormProps) => {
 
           <CardFooter className="flex justify-start pl-0 pt-3 mt-5">
             <Button type="submit">Save Changes</Button>
+            <Button className="ml-5" type="button" onClick={handleSignOut}>
+              Sign out
+            </Button>
           </CardFooter>
         </form>
       </CardContent>
