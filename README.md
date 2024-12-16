@@ -9,6 +9,23 @@ The Next.js + Tailwind + Shadcn Boilerplate is an internal project designed to s
 - **Accelerate Project Initiation**: Eliminate repetitive setup tasks and get projects up and running faster.
 - **Promote Standards**: Ensure adherence to company-wide development guidelines and best practices.
 - **Enhance Maintainability**: Provide a clean, modular codebase that simplifies scaling and feature additions.
+
+## Prerequisites
+
+- **Node.js**: >= 20.16.0 < 21
+- **PNPM**: 8.15.9
+
+## Installation
+
+Install this boilerplate with pnpm
+
+```bash
+  git clone git@github.com:paktolus/nextsjs_tailwind_boilerplate.git
+  cd nextsjs_tailwind_boilerplate
+  pnpm install
+  pnpm dev
+```
+    
 ## Sign-In
 
 The Sign-In page is powered by NextAuth.js with a Credentials Provider, ensuring a secure and customizable authentication process.
