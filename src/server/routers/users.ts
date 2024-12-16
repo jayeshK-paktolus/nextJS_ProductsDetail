@@ -2,7 +2,7 @@ import backendInstance from "@/lib/backend-instance";
 import { HttpStatusCode } from "axios";
 import { privateProcedure, router } from "../trpc";
 import { z } from "zod";
-import { UpdateAccountFormSchema } from "@/schemas/account";
+import { ChangeAccountPasswordFromSchema, UpdateAccountFormSchema } from "@/schemas/account";
 
 export const usersRouter = router({
   me: privateProcedure.query(async () => {
@@ -46,6 +46,30 @@ export const usersRouter = router({
         };
       } catch {
         return null;
+      }
+    }),
+
+    changePassword: privateProcedure
+    .input(ChangeAccountPasswordFromSchema) 
+    .mutation(async ({ input }: { input: z.infer<typeof ChangeAccountPasswordFromSchema> }) => {
+      try {  
+        const response = await backendInstance.put<{
+          oldPassword: string;
+          password: string;
+          confirmPassword: string;
+        }>("/users/me/change-password", input); 
+
+        if (response.status !== HttpStatusCode.Ok) {
+         return null
+        }
+
+        return {
+          oldPassword: response.data.oldPassword,
+          password: response.data.password,
+          confirmPassword: response.data.confirmPassword,
+        };
+      } catch (error) {
+        throw error; 
       }
     }),
 });

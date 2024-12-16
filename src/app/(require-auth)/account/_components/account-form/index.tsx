@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { UpdateAccountFormSchema } from "@/schemas/account";
 import { trpc } from "@/lib/trpc/client"; // Assuming you're using trpc for API requests
+import { signOut } from "next-auth/react";
 
 type AccountFormValues = z.infer<typeof UpdateAccountFormSchema>;
 type AccountFormProps = { data: AccountFormValues };
@@ -45,6 +46,12 @@ const AccountForm = ({ data }: AccountFormProps) => {
     }
   };
 
+  const handleSignOut = () => {
+    signOut({
+      callbackUrl: "/auth/sign-in",
+    });
+  };
+
   return (
     <Card className="w-full h-full">
       <CardHeader className="mb-10 border-b border-gray-200">
@@ -52,7 +59,7 @@ const AccountForm = ({ data }: AccountFormProps) => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid w-full items-center grid-cols-2 gap-6">
+          <div className="grid w-full items-center grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="flex flex-col space-y-2">
               <Label htmlFor="firstName">First Name</Label>
               <Input
@@ -96,6 +103,9 @@ const AccountForm = ({ data }: AccountFormProps) => {
 
           <CardFooter className="flex justify-start pl-0 pt-3 mt-5">
             <Button type="submit">Save Changes</Button>
+            <Button className="ml-5" type="button" onClick={handleSignOut}>
+              Sign out
+            </Button>
           </CardFooter>
         </form>
       </CardContent>
