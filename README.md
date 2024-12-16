@@ -80,3 +80,15 @@ Features:
 - **Language Switcher**: A `LanguageSwitcher` component, implemented as a select dropdown, allows users to choose their preferred language seamlessly.
 
 This internationalization setup ensures that the application can cater to users from different language backgrounds with minimal effort.
+
+## Configurations
+
+#### Global
+
+|                 	| Required/Optional 	| Default 	| Description                                  	|
+|-----------------	|-------------------	|---------	|----------------------------------------------	|
+| BASE_URL        	| Required          	| N/A     	| Project Base URL.                            	|
+| BACKEND_URL     	| Required          	| N/A     	| Backend Base URL.                            	|
+| BACKEND_API_KEY 	| Required          	| N/A     	| Backend API Key.                             	|
+| NEXTAUTH_URL    	| Required          	| N/A     	| Base URL used by NextAuth to redirect users. 	|
+| NEXTAUTH_SECRET 	| Required          	| N/A     	| NextAuth secret.                             	|
