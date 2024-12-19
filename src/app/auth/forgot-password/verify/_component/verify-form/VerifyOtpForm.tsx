@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -24,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+import { usePersistedLocalStorageState } from "@/hooks/usePersistedLocalStorageState";
+
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,18 +36,23 @@ import { trpc } from "@/lib/trpc/client";
 const VerifyOtpForm = () => {
   const [isErrorWhileSubmitting, setIsErrorWhileSubmitting] = useState(false);
   const router = useRouter();
-  const params = useSearchParams();
-  const persistedEmail = params.get("email");
+  const { value: persistedEmail } = usePersistedLocalStorageState("email", "");
+  const { setValue: setPersistedOtp } = usePersistedLocalStorageState(
+    "otp",
+    ""
+  );
   const form = useForm({
     resolver: zodResolver(OtpFormSchema),
     defaultValues: { email: persistedEmail || "", otp: "" },
   });
-  const { email, otp } = form.getValues();
+  const { otp } = form.getValues();
   const { mutate, isPending } = trpc.auth.verifyOtp.useMutation<
     z.infer<typeof OtpFormSchema>
   >({
-    onSuccess: () =>
-      router.push(`/auth/reset-password?email=${email}&otp=${otp}`),
+    onSuccess: () => {
+      setPersistedOtp(otp);
+      router.push(`/auth/reset-password`);
+    },
     onError: () => setIsErrorWhileSubmitting(true),
   });
 

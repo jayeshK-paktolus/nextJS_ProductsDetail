@@ -14,6 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { usePersistedLocalStorageState } from "@/hooks/usePersistedLocalStorageState";
+
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,9 +40,16 @@ const ForgotPasswordForm = () => {
   const { mutate, isPending } = trpc.auth.sendOtp.useMutation<
     z.infer<typeof ForgotPasswordFormSchema>
   >({
-    onSuccess: () => router.push(`/auth/forgot-password/verify?email=${email}`),
+    onSuccess: () => {
+      setPersistedEmail(email);
+      router.push(`/auth/forgot-password/verify`);
+    },
   });
   const router = useRouter();
+  const { setValue: setPersistedEmail } = usePersistedLocalStorageState(
+    "email",
+    ""
+  );
 
   const onSubmit: SubmitHandler<z.infer<typeof ForgotPasswordFormSchema>> = (
     data
