@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-import { usePersistedLocalStorageState } from "@/hooks/usePersistedLocalStorageState";
+import { usePersistedLocalStorageState } from "@/hooks/use-persisted-local-storage-state";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -51,7 +51,7 @@ const VerifyOtpForm = () => {
   >({
     onSuccess: () => {
       setPersistedOtp(otp);
-      router.push(`/auth/reset-password`);
+      router.push(`/auth/forgot-password/reset`);
     },
     onError: () => setIsErrorWhileSubmitting(true),
   });

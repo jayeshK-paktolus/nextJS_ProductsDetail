@@ -2,7 +2,7 @@
 
 import { useState, type ChangeEvent } from "react";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -28,6 +28,8 @@ import { Progress } from "@/components/ui/progress";
 
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 
+import { usePersistedLocalStorageState } from "@/hooks/use-persisted-local-storage-state";
+
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,11 +37,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ResetPasswordSchema } from "@/schemas/forgot-password";
 import { trpc } from "@/lib/trpc/client";
 import { estimatePasswordStrength } from "@/lib/utils";
+import { EstimatePasswordStrength } from "@/lib/enums/estimate-password-strength.enum";
 
 const ResetForm = () => {
-  const params = useSearchParams();
-  const persistedEmail = params.get("email");
-  const persistedOtp = params.get("otp");
+  const { value: persistedEmail, removeValue: removePersistedEmail } =
+    usePersistedLocalStorageState("email", "");
+  const { value: persistedOtp, removeValue: removePersistedOtp } =
+    usePersistedLocalStorageState("otp", "");
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(ResetPasswordSchema),
@@ -52,9 +56,15 @@ const ResetForm = () => {
   });
   const { mutate, isPending } = trpc.auth.resetPassword.useMutation<
     z.infer<typeof ResetPasswordSchema>
-  >({ onSuccess: () => router.push("/auth/sign-in") });
+  >({
+    onSuccess: () => {
+      removePersistedEmail();
+      removePersistedOtp();
+      router.push("/auth/sign-in");
+    },
+  });
   const [passwordStrength, setPasswordStrength] = useState({
-    strengthInWord: "Very Weak",
+    strengthInWord: EstimatePasswordStrength.VeryWeak,
     strengthInNumber: 0,
   });
   const [isPasswordMasked, setIsPasswordMasked] = useState(true);
@@ -63,27 +73,27 @@ const ResetForm = () => {
     const strength = estimatePasswordStrength(event.target.value);
 
     switch (strength) {
-      case null:
+      case EstimatePasswordStrength.VeryWeak:
         setPasswordStrength({
-          strengthInWord: "Very Weak",
-          strengthInNumber: 0,
-        });
-        break;
-      case "Very Weak":
-        setPasswordStrength({
-          strengthInWord: "Very Weak",
+          strengthInWord: EstimatePasswordStrength.VeryWeak,
           strengthInNumber: 25,
         });
         break;
-      case "Weak":
-        setPasswordStrength({ strengthInWord: "Weak", strengthInNumber: 50 });
-        break;
-      case "Medium":
-        setPasswordStrength({ strengthInWord: "Medium", strengthInNumber: 75 });
-        break;
-      case "Strong":
+      case EstimatePasswordStrength.Weak:
         setPasswordStrength({
-          strengthInWord: "Strong",
+          strengthInWord: EstimatePasswordStrength.Weak,
+          strengthInNumber: 50,
+        });
+        break;
+      case EstimatePasswordStrength.Medium:
+        setPasswordStrength({
+          strengthInWord: EstimatePasswordStrength.Medium,
+          strengthInNumber: 75,
+        });
+        break;
+      case EstimatePasswordStrength.Strong:
+        setPasswordStrength({
+          strengthInWord: EstimatePasswordStrength.Strong,
           strengthInNumber: 100,
         });
         break;

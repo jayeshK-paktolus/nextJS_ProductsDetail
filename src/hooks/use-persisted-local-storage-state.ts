@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-export const usePersistedLocalStorageState = (
+export const usePersistedLocalStorageState = <T>(
   key: string,
-  initialValue: string
+  initialValue: T
 ) => {
   const isWindowObjectAvailable = typeof window !== "undefined";
 
@@ -14,7 +14,7 @@ export const usePersistedLocalStorageState = (
       if (!item) {
         return initialValue;
       }
-      return JSON.parse(item);
+      return JSON.parse(item) as T;
     }
   });
 
@@ -24,7 +24,7 @@ export const usePersistedLocalStorageState = (
     }
   }, [key, value, initialValue, isWindowObjectAvailable]);
 
-  const removeValue = (key: string) => {
+  const removeValue = () => {
     if (isWindowObjectAvailable) {
       localStorage.removeItem(key);
       setValue(initialValue);

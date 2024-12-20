@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { usePersistedLocalStorageState } from "@/hooks/usePersistedLocalStorageState";
+import { usePersistedLocalStorageState } from "@/hooks/use-persisted-local-storage-state";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";

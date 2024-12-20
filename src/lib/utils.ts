@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { EstimatePasswordStrength } from "./enums/estimate-password-strength.enum";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -16,8 +18,8 @@ export const estimatePasswordStrength = (password: string) => {
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!*])(?=.*[^\s]).{8,}$/;
   let score = 0;
 
-  if (password.length === 0) return null;
-  if (regex.test(password)) return "Strong";
+  if (password.length === 0) return EstimatePasswordStrength.VeryWeak;
+  if (regex.test(password)) return EstimatePasswordStrength.Strong;
   if (password.length >= 8) score++;
   if (/\d/.test(password)) score++;
   if (/[a-z]/.test(password)) score++;
@@ -26,10 +28,10 @@ export const estimatePasswordStrength = (password: string) => {
   if (!/\s/.test(password)) score++;
 
   if (score >= 5) {
-    return "Medium";
+    return EstimatePasswordStrength.Medium;
   } else if (score >= 3) {
-    return "Weak";
+    return EstimatePasswordStrength.Weak;
   } else {
-    return "Very Weak";
+    return EstimatePasswordStrength.VeryWeak;
   }
 };
