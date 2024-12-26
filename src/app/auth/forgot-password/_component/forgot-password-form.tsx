@@ -14,8 +14,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { usePersistedLocalStorageState } from "@/hooks/use-persisted-local-storage-state";
-
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,20 +34,14 @@ const ForgotPasswordForm = () => {
     resolver: zodResolver(ForgotPasswordFormSchema),
     defaultValues: { email: "" },
   });
-  const { email } = form.getValues();
   const { mutate, isPending } = trpc.auth.sendOtp.useMutation<
     z.infer<typeof ForgotPasswordFormSchema>
   >({
-    onSuccess: () => {
-      setPersistedEmail(email);
-      router.push(`/auth/forgot-password/verify`);
+    onSuccess: (data) => {
+      router.push(`/auth/forgot-password/verify?token=${data?.token}`);
     },
   });
   const router = useRouter();
-  const { setValue: setPersistedEmail } = usePersistedLocalStorageState(
-    "email",
-    ""
-  );
 
   const onSubmit: SubmitHandler<z.infer<typeof ForgotPasswordFormSchema>> = (
     data
@@ -58,53 +50,47 @@ const ForgotPasswordForm = () => {
   };
 
   return (
-    <section className="w-full h-screen  flex-xy-center">
-      <Card className="w-11/12 md:w-80">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-xl">Forgot Password</CardTitle>
-          <CardDescription>
-            If your email is registered, you will recieve an OTP shortly.
-          </CardDescription>
-        </CardHeader>
+    <Card className="w-11/12 md:w-80">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl">Forgot Password</CardTitle>
+        <CardDescription>
+          If your email is registered, you will recieve an OTP shortly.
+        </CardDescription>
+      </CardHeader>
 
-        <CardContent>
-          <Form {...form}>
-            <form
-              id="forgot-password-form"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Your Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="name@email.com" />
-                    </FormControl>
-                    <FormMessage className="error-message" />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
-        </CardContent>
-
-        <CardFooter>
-          <Button
-            disabled={isPending}
-            type="submit"
-            form="forgot-password-form"
+      <CardContent>
+        <Form {...form}>
+          <form
+            id="forgot-password-form"
+            onSubmit={form.handleSubmit(onSubmit)}
           >
-            Send OTP
-          </Button>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="name@email.com" />
+                  </FormControl>
+                  <FormMessage className="error-message" />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
+      </CardContent>
 
-          <Button disabled={isPending} variant="link" type="button">
-            <Link href="/auth/sign-in">Return to Sign in</Link>
-          </Button>
-        </CardFooter>
-      </Card>
-    </section>
+      <CardFooter>
+        <Button disabled={isPending} type="submit" form="forgot-password-form">
+          Send OTP
+        </Button>
+
+        <Button disabled={isPending} variant="link" type="button">
+          <Link href="/auth/sign-in">Return to Sign in</Link>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 

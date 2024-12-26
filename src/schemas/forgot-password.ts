@@ -5,8 +5,11 @@ export const ForgotPasswordFormSchema = z.object({
 });
 
 export const OtpFormSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email." }).trim(),
   otp: z.string().length(6, "OTP must contain 6 digits").trim(),
+});
+
+export const OtpMutationSchema = OtpFormSchema.extend({
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
 });
 
 export const ResetPasswordSchema = z
