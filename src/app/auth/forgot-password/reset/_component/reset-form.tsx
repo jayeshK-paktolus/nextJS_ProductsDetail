@@ -110,87 +110,85 @@ const ResetForm = () => {
   };
 
   return (
-    <section className="w-full h-screen  flex-xy-center">
-      <Card className="w-11/12 md:w-80">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-xl">Reset Password</CardTitle>
-          <CardDescription>Please enter new password</CardDescription>
-        </CardHeader>
+    <Card className="w-11/12 md:w-80">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl">Reset Password</CardTitle>
+        <CardDescription>Please enter new password</CardDescription>
+      </CardHeader>
 
-        <CardContent>
-          <Form {...form}>
-            <form id="reset-form" onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="mb-2">
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          {...field}
-                          type={isPasswordMasked ? "password" : "text"}
-                          placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
-                          onChange={(event) => {
-                            field.onChange(event);
-                            handlePasswordChange(event);
-                          }}
-                        />
-                        <Button
-                          className="w-fit h-fit hover:bg-transparent  absolute top-2.5 right-3"
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={handlePasswordMask}
-                        >
-                          {isPasswordMasked ? <EyeOpenIcon /> : <EyeNoneIcon />}
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-destructive text-xs" />
-                  </FormItem>
-                )}
-              />
-              <Label>
-                Password strength is: {passwordStrength.strengthInWord}
-              </Label>
-              <Progress
-                className="h-3 my-2"
-                value={passwordStrength.strengthInNumber}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <FormControl>
+      <CardContent>
+        <Form {...form}>
+          <form id="reset-form" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <div className="relative">
                       <Input
                         {...field}
-                        type="password"
+                        type={isPasswordMasked ? "password" : "text"}
                         placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
+                        onChange={(event) => {
+                          field.onChange(event);
+                          handlePasswordChange(event);
+                        }}
                       />
-                    </FormControl>
-                    <FormMessage className="text-destructive text-xs" />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
-        </CardContent>
+                      <Button
+                        className="w-fit h-fit hover:bg-transparent  absolute top-2.5 right-3"
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={handlePasswordMask}
+                      >
+                        {isPasswordMasked ? <EyeOpenIcon /> : <EyeNoneIcon />}
+                      </Button>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-destructive text-xs" />
+                </FormItem>
+              )}
+            />
+            <Label>
+              Password strength is: {passwordStrength.strengthInWord}
+            </Label>
+            <Progress
+              className="h-3 my-2"
+              value={passwordStrength.strengthInNumber}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-destructive text-xs" />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
+      </CardContent>
 
-        <CardFooter>
-          <Button disabled={isPending} type="submit" form="reset-form">
-            Reset
-          </Button>
+      <CardFooter>
+        <Button disabled={isPending} type="submit" form="reset-form">
+          Reset
+        </Button>
 
-          <Button variant="link" type="button">
-            <Link href="/auth/sign-in">Return to Sign in</Link>
-          </Button>
-        </CardFooter>
-      </Card>
-    </section>
+        <Button variant="link" type="button">
+          <Link href="/auth/sign-in">Return to Sign in</Link>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 
