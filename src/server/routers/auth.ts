@@ -7,7 +7,7 @@ import { publicProcedure, router } from "../trpc";
 import {
   ForgotPasswordFormSchema,
   OtpMutationSchema,
-  ResetPasswordSchema,
+  ResetPasswordMutationSchema,
 } from "@/schemas/forgot-password";
 
 export const authRouter = router({
@@ -50,7 +50,7 @@ export const authRouter = router({
       }
     }),
   resetPassword: publicProcedure
-    .input(ResetPasswordSchema)
+    .input(ResetPasswordMutationSchema)
     .mutation(async ({ input }) => {
       try {
         const response = await backendInstance.post("/auth/reset-password", {

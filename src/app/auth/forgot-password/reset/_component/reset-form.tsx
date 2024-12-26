@@ -2,7 +2,7 @@
 
 import { useState, type ChangeEvent } from "react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -28,38 +28,31 @@ import { Progress } from "@/components/ui/progress";
 
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 
-import { usePersistedLocalStorageState } from "@/hooks/use-persisted-local-storage-state";
-
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ResetPasswordSchema } from "@/schemas/forgot-password";
+import { ResetPasswordFormSchema } from "@/schemas/forgot-password";
 import { trpc } from "@/lib/trpc/client";
-import { estimatePasswordStrength } from "@/lib/utils";
+import { decryptData, estimatePasswordStrength } from "@/lib/utils";
 import { EstimatePasswordStrength } from "@/lib/enums/estimate-password-strength.enum";
 
 const ResetForm = () => {
-  const { value: persistedEmail, removeValue: removePersistedEmail } =
-    usePersistedLocalStorageState("email", "");
-  const { value: persistedOtp, removeValue: removePersistedOtp } =
-    usePersistedLocalStorageState("otp", "");
   const router = useRouter();
+  const params = useSearchParams();
+  const decryptedToken = JSON.parse(decryptData(params.get("token") || ""));
+  const persistedFormData = { ...decryptedToken };
   const form = useForm({
-    resolver: zodResolver(ResetPasswordSchema),
+    resolver: zodResolver(ResetPasswordFormSchema),
     defaultValues: {
-      email: persistedEmail || "",
-      otp: persistedOtp || "",
       password: "",
       confirmPassword: "",
     },
   });
   const { mutate, isPending } = trpc.auth.resetPassword.useMutation<
-    z.infer<typeof ResetPasswordSchema>
+    z.infer<typeof ResetPasswordFormSchema>
   >({
     onSuccess: () => {
-      removePersistedEmail();
-      removePersistedOtp();
       router.push("/auth/sign-in");
     },
   });
@@ -105,12 +98,12 @@ const ResetForm = () => {
   const handlePasswordMask = () =>
     setIsPasswordMasked((prevState) => !prevState);
 
-  const onSubmit: SubmitHandler<z.infer<typeof ResetPasswordSchema>> = (
+  const onSubmit: SubmitHandler<z.infer<typeof ResetPasswordFormSchema>> = (
     data
   ) => {
     mutate({
-      email: data.email,
-      otp: data.otp,
+      email: persistedFormData.email,
+      otp: persistedFormData.otp,
       password: data.password,
       confirmPassword: data.confirmPassword,
     });
