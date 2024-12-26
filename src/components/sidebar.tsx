@@ -1,13 +1,15 @@
 import { ChartPie, SquareChartGantt, UserRoundCog } from "lucide-react";
 import Link from "next/link";
 import LanguageSwitcher from "./language-switcher";
+import { cn } from "@/lib/utils";
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   return (
     <div
-      className={`${"w-64 h-screen pt-8 border-r border-gray-300 fixed top-0 left-0 transition-transform duration-300 ease-in-out"} ${
-        isOpen ? "transform translate-x-0" : "transform -translate-x-full"
-      }`}
+      className={cn(
+        "fixed z-40 overflow-y-auto p-4 transition-transform left-0 top-0 h-screen pt-14 w-64 -translate-x-full border-r border-gray-200 md:translate-x-0 bg-gray-50",
+        { "transform-none": isOpen }
+      )}
     >
       <aside>
         <div className="h-full pt-4 pb-4 m-[20px]">
