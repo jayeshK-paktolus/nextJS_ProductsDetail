@@ -27,6 +27,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { Loader2 } from "lucide-react";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -181,7 +182,7 @@ const ResetForm = () => {
 
       <CardFooter>
         <Button disabled={isPending} type="submit" form="reset-form">
-          Reset
+          {isPending && <Loader2 className="animate-spin" />} Reset
         </Button>
 
         <Button variant="link" type="button">
