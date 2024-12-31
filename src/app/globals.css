@@ -7,8 +7,17 @@ body {
 }
 
 @layer utilities {
+  /* elements */
   .text-balance {
     text-wrap: balance;
+  }
+  .error-message {
+    @apply text-destructive text-xs;
+  }
+
+  /* layout */
+  .flex-xy-center {
+    @apply flex justify-center items-center;
   }
 }
 
@@ -74,17 +83,5 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-@layer utilities {
-  /* elements */
-  .error-message {
-    @apply text-destructive text-xs;
-  }
-
-  /* layout */
-  .flex-xy-center {
-    @apply flex justify-center items-center;
   }
 }
