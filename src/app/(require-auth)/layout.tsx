@@ -2,6 +2,7 @@
 import { ReactNode, useState, useEffect } from "react";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
+import { cn } from "@/lib/utils";
 
 interface LayoutProps {
   children: ReactNode;
@@ -9,16 +10,12 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setIsSmallScreen(true);
         setSidebarOpen(false);
       } else {
-        setIsSmallScreen(false);
         setSidebarOpen(true);
       }
     };
@@ -41,7 +38,17 @@ export default function Layout({ children }: LayoutProps) {
       <Navbar toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
       <div className="flex">
         <Sidebar isOpen={sidebarOpen} />
-        <div className="flex flex-1">{children}</div>
+        <div
+          className={cn(
+            "w-full relative overflow-y-auto p-4 md:ml-64 h-auto pt-20 bg-gray-50",
+            {
+              "sm:opacity-50 md:opacity-100 lg:opacity-100": sidebarOpen,
+              "opacity-100": !sidebarOpen,
+            }
+          )}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
