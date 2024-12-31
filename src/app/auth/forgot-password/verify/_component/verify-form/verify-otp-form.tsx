@@ -24,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+import { Loader2 } from "lucide-react";
+
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -98,7 +100,7 @@ const VerifyOtpForm = () => {
 
       <CardFooter>
         <Button disabled={isPending} type="submit" form="otp-form">
-          Verify
+          {isPending && <Loader2 className="animate-spin" />} Verify
         </Button>
 
         <Button variant="link" type="button">
