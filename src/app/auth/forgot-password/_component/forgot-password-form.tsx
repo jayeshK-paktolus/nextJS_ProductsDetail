@@ -14,6 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { Loader2 } from "lucide-react";
+
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -83,7 +85,7 @@ const ForgotPasswordForm = () => {
 
       <CardFooter>
         <Button disabled={isPending} type="submit" form="forgot-password-form">
-          Send OTP
+          {isPending && <Loader2 className="animate-spin" />} Send OTP
         </Button>
 
         <Button disabled={isPending} variant="link" type="button">
