@@ -4,30 +4,25 @@ import { useState, useMemo } from "react";
 
 import Search from "./search";
 import Filter from "./filter";
-import { Table } from "./table";
+import { DataTable } from "./data-table";
 import { Pagination } from "@/components/pagination/pagination";
 
 import { mockProducts } from "../mock-products";
+import { columns } from "./columns";
 
 function ProductsList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
-  console.log("selectedFilter state: ", selectedFilter);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
 
-  const filterOptions = mockProducts.reduce<string[]>(
-    (accumulator, product, index) => {
-      if (index === 0) {
-        accumulator.push("All");
-      }
-      if (!accumulator.includes(product.category)) {
-        accumulator.push(product.category);
-      }
-      return accumulator;
-    },
+  const filterOptions = useMemo(
+    () => [
+      "All",
+      ...Array.from(new Set(mockProducts.map((product) => product.category))),
+    ],
     []
   );
 
@@ -56,6 +51,7 @@ function ProductsList() {
   };
 
   const handleFilterChange = (value: string) => {
+    setCurrentPage(1);
     setSelectedFilter(value);
   };
 
@@ -69,12 +65,16 @@ function ProductsList() {
         />
         <Search handleChange={handleSearchQuery} />
       </div>
-      <Table products={currentProducts} />
-      <Pagination
-        totalNumberOfPages={totalPages}
-        currentPage={currentPage}
-        changePage={setCurrentPage}
-      />
+
+      <DataTable columns={columns} data={currentProducts} />
+
+      {totalPages !== 0 && (
+        <Pagination
+          totalNumberOfPages={totalPages}
+          currentPage={currentPage}
+          changePage={setCurrentPage}
+        />
+      )}
     </div>
   );
 }
