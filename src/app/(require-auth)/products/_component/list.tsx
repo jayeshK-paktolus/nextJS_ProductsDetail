@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 
 import Search from "./search";
 import Filter from "./filter";
-import { DataTable } from "./data-table";
+import { DataTable } from "@/components/ui/data-table";
 import { Pagination } from "@/components/pagination/pagination";
 
 import { mockProducts } from "../mock-products";
