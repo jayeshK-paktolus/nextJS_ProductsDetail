@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { signIn } from "next-auth/react";
+import { NextIntlClientProvider } from "next-intl";
 import SignInPage from "./page";
 
 jest.mock("next-auth/react", () => ({
@@ -8,10 +9,33 @@ jest.mock("next-auth/react", () => ({
 }));
 
 describe("SignInPage", () => {
-  it("renders the login form with all fields", () => {
-    render(<SignInPage />);
+  const messages = {
+    signIn: {
+      title: "Sign In",
+      emailInput: {
+        label: "Email",
+        placeholder: "Insert your email",
+      },
+      passwordInput: {
+        label: "Password",
+        placeholder: "Insert your password",
+      },
+      signInButton: {
+        label: "Sign In",
+        loadingLabel: "Signing In...",
+      },
+      forgotPassword: "Forgot password?",
+    },
+  };
 
-    expect(screen.getByRole("heading", { name: "Login" })).toBeInTheDocument();
+  it("renders the login form with all fields", () => {
+    render(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <SignInPage />
+      </NextIntlClientProvider>
+    );
+
+    expect(screen.getByRole("heading", { name: "Sign In" })).toBeInTheDocument();
 
     const emailInput = screen.getByPlaceholderText("Insert your email");
     expect(emailInput).toBeInTheDocument();
@@ -25,7 +49,11 @@ describe("SignInPage", () => {
   });
 
   it("disables the submit button while submitting", async () => {
-    render(<SignInPage />);
+    render(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <SignInPage />
+      </NextIntlClientProvider>
+    );
     const user = userEvent.setup();
 
     const emailInput = screen.getByPlaceholderText("Insert your email");
@@ -52,7 +80,11 @@ describe("SignInPage", () => {
   });
 
   it("shows validation messages for invalid input", async () => {
-    render(<SignInPage />);
+    render(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <SignInPage />
+      </NextIntlClientProvider>
+    );
     const user = userEvent.setup();
 
     const submitButton = screen.getByRole("button", { name: "Sign In" });
