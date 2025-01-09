@@ -1,0 +1,16 @@
+{
+    "title": "Sign In",
+    "emailInput": {
+        "label": "Email",
+        "placeholder": "Insert your email"
+    },
+    "passwordInput": {
+        "label": "Password",
+        "placeholder": "Insert your password"
+    },
+    "signInButton": {
+        "label": "Sign In",
+        "loadingLabel": "Signing In..."
+    },
+    "forgotPassword": "Forgot password?"
+}
