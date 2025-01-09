@@ -1,0 +1,16 @@
+{
+    "title": "Inicia sesión en tu cuenta",
+    "emailInput": {
+        "label": "Tu correo electrónico",
+        "placeholder": "Ingresa tu correo electrónico"
+    },
+    "passwordInput": {
+        "label": "Contraseña",
+        "placeholder": "Ingresa tu contraseña"
+    },
+    "signInButton": {
+        "label": "Iniciar sesión",
+        "loadingLabel": "Iniciando sesión..."
+    },
+    "forgotPassword": "¿Olvidaste tu contraseña?"
+}

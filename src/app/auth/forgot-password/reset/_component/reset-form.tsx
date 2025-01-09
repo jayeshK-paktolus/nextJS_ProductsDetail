@@ -2,9 +2,10 @@
 
 import { useState, type ChangeEvent } from "react";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -21,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -29,19 +29,23 @@ import { Progress } from "@/components/ui/progress";
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ResetPasswordFormSchema } from "@/schemas/forgot-password";
+import { EstimatePasswordStrength } from "@/lib/enums/estimate-password-strength.enum";
 import { trpc } from "@/lib/trpc/client";
 import { decryptData, estimatePasswordStrength } from "@/lib/utils";
-import { EstimatePasswordStrength } from "@/lib/enums/estimate-password-strength.enum";
+import { ResetPasswordFormSchema } from "@/schemas/forgot-password";
+import { useTranslations } from "next-intl";
 
 const ResetForm = () => {
+  const t = useTranslations("forgotPassword.resetPassword");
   const router = useRouter();
   const params = useSearchParams();
-  const decryptedToken = JSON.parse(decryptData(params.get("token") || ""));
+  const decryptedToken = params.get("token")
+    ? JSON.parse(decryptData(params.get("token") ?? ""))
+    : "";
   const persistedFormData = { ...decryptedToken };
   const form = useForm({
     resolver: zodResolver(ResetPasswordFormSchema),
@@ -113,8 +117,8 @@ const ResetForm = () => {
   return (
     <Card className="w-11/12 md:w-80">
       <CardHeader className="pb-4">
-        <CardTitle className="text-xl">Reset Password</CardTitle>
-        <CardDescription>Please enter new password</CardDescription>
+        <CardTitle className="text-xl">{t("title")}</CardTitle>
+        <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -125,7 +129,7 @@ const ResetForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("passwordField.label")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -164,7 +168,7 @@ const ResetForm = () => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>{t("confirmPasswordField.label")}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -180,14 +184,17 @@ const ResetForm = () => {
         </Form>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="gap-x-2">
         <Button disabled={isPending} type="submit" form="reset-form">
-          {isPending && <Loader2 className="animate-spin" />} Reset
+          {isPending && <Loader2 className="animate-spin" />} {t("button")}
         </Button>
 
-        <Button variant="link" type="button">
-          <Link href="/auth/sign-in">Return to Sign in</Link>
-        </Button>
+        <Link
+          href="/auth/sign-in"
+          className="text-sm font-medium hover:underline"
+        >
+          {t("returnToSignIn")}
+        </Link>
       </CardFooter>
     </Card>
   );

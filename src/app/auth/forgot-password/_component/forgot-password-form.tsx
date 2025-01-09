@@ -1,8 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,17 +12,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { Loader2 } from "lucide-react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ForgotPasswordFormSchema } from "@/schemas/forgot-password";
-import { trpc } from "@/lib/trpc/client";
 import {
   Form,
   FormControl,
@@ -30,8 +28,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { trpc } from "@/lib/trpc/client";
+import { ForgotPasswordFormSchema } from "@/schemas/forgot-password";
+import { useTranslations } from "next-intl";
 
 const ForgotPasswordForm = () => {
+  const t = useTranslations("forgotPassword.sendOtp");
   const form = useForm({
     resolver: zodResolver(ForgotPasswordFormSchema),
     defaultValues: { email: "" },
@@ -54,10 +56,8 @@ const ForgotPasswordForm = () => {
   return (
     <Card className="w-11/12 md:w-80">
       <CardHeader className="pb-4">
-        <CardTitle className="text-xl">Forgot Password</CardTitle>
-        <CardDescription>
-          If your email is registered, you will recieve an OTP shortly.
-        </CardDescription>
+        <CardTitle className="text-xl">{t("title")}</CardTitle>
+        <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -71,7 +71,7 @@ const ForgotPasswordForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Your Email</FormLabel>
+                  <FormLabel>{t("emailField.label")}</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="name@email.com" />
                   </FormControl>
@@ -83,14 +83,17 @@ const ForgotPasswordForm = () => {
         </Form>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="gap-x-2">
         <Button disabled={isPending} type="submit" form="forgot-password-form">
-          {isPending && <Loader2 className="animate-spin" />} Send OTP
+          {isPending && <Loader2 className="animate-spin" />} {t("button")}
         </Button>
 
-        <Button disabled={isPending} variant="link" type="button">
-          <Link href="/auth/sign-in">Return to Sign in</Link>
-        </Button>
+        <Link
+          href="/auth/sign-in"
+          className="text-sm font-medium hover:underline"
+        >
+          {t("returnToSignIn")}
+        </Link>
       </CardFooter>
     </Card>
   );
