@@ -35,7 +35,7 @@ export default function Users() {
       <div className="w-full h-24">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart width={850} height={40} data={data}>
-            <Bar dataKey="pv" fill="#8884d8" background={{ fill: "#374151" }} />
+            <Bar dataKey="pv" fill="#8884d8" background={{ fill: "#374151" }} isAnimationActive={false}/>
           </BarChart>
         </ResponsiveContainer>
       </div>
