@@ -33,6 +33,7 @@ export default function TrafficByDevice() {
             fill="#8884d8"
             paddingAngle={5}
             dataKey="value"
+            isAnimationActive={false}
           >
             {data.map((_entry, index) => (
               <Cell
