@@ -102,7 +102,7 @@ export default function SignInPage() {
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder={t("passwordInput.label")}
+                        placeholder={t("passwordInput.placeholder")}
                         {...field}
                         disabled={isLoading}
                         className="bg-gray-300 text-gray-900 border-none"
