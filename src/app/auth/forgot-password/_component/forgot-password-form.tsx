@@ -73,7 +73,7 @@ const ForgotPasswordForm = () => {
                 <FormItem>
                   <FormLabel>{t("emailField.label")}</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="name@email.com" />
+                    <Input {...field} placeholder="john.doe@example.com" />
                   </FormControl>
                   <FormMessage className="error-message" />
                 </FormItem>
