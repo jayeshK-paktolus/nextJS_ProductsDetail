@@ -1,7 +1,5 @@
 "use client";
 
-import { useState, type ChangeEvent } from "react";
-
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -22,20 +20,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 
-import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { EstimatePasswordStrength } from "@/lib/enums/estimate-password-strength.enum";
+import { PasswordInput } from "@/components/ui/password-input";
+import { PasswordStrengthMeter } from "@/components/ui/password-strength-meter";
 import { trpc } from "@/lib/trpc/client";
-import { decryptData, estimatePasswordStrength } from "@/lib/utils";
+import { decryptData } from "@/lib/utils";
 import { ResetPasswordFormSchema } from "@/schemas/forgot-password";
 import { useTranslations } from "next-intl";
 
@@ -61,47 +56,6 @@ const ResetForm = () => {
       router.push("/auth/sign-in");
     },
   });
-  const [passwordStrength, setPasswordStrength] = useState({
-    strengthInWord: EstimatePasswordStrength.VeryWeak,
-    strengthInNumber: 0,
-  });
-  const [isPasswordMasked, setIsPasswordMasked] = useState(true);
-
-  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const strength = estimatePasswordStrength(event.target.value);
-
-    switch (strength) {
-      case EstimatePasswordStrength.VeryWeak:
-        setPasswordStrength({
-          strengthInWord: EstimatePasswordStrength.VeryWeak,
-          strengthInNumber: 25,
-        });
-        break;
-      case EstimatePasswordStrength.Weak:
-        setPasswordStrength({
-          strengthInWord: EstimatePasswordStrength.Weak,
-          strengthInNumber: 50,
-        });
-        break;
-      case EstimatePasswordStrength.Medium:
-        setPasswordStrength({
-          strengthInWord: EstimatePasswordStrength.Medium,
-          strengthInNumber: 75,
-        });
-        break;
-      case EstimatePasswordStrength.Strong:
-        setPasswordStrength({
-          strengthInWord: EstimatePasswordStrength.Strong,
-          strengthInNumber: 100,
-        });
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handlePasswordMask = () =>
-    setIsPasswordMasked((prevState) => !prevState);
 
   const onSubmit: SubmitHandler<z.infer<typeof ResetPasswordFormSchema>> = (
     data
@@ -123,7 +77,7 @@ const ResetForm = () => {
 
       <CardContent>
         <Form {...form}>
-          <form id="reset-form" onSubmit={form.handleSubmit(onSubmit)}>
+          <form id="reset-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-2">
             <FormField
               control={form.control}
               name="password"
@@ -131,38 +85,13 @@ const ResetForm = () => {
                 <FormItem className="mb-2">
                   <FormLabel>{t("passwordField.label")}</FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <Input
-                        {...field}
-                        type={isPasswordMasked ? "password" : "text"}
-                        placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
-                        onChange={(event) => {
-                          field.onChange(event);
-                          handlePasswordChange(event);
-                        }}
-                      />
-                      <Button
-                        className="w-fit h-fit hover:bg-transparent  absolute top-2.5 right-3"
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={handlePasswordMask}
-                      >
-                        {isPasswordMasked ? <EyeOpenIcon /> : <EyeNoneIcon />}
-                      </Button>
-                    </div>
+                    <PasswordInput {...field} />
                   </FormControl>
                   <FormMessage className="text-destructive text-xs" />
                 </FormItem>
               )}
             />
-            <Label>
-              Password strength is: {passwordStrength.strengthInWord}
-            </Label>
-            <Progress
-              className="h-3 my-2"
-              value={passwordStrength.strengthInNumber}
-            />
+            <PasswordStrengthMeter control={form.control} name="password" />
             <FormField
               control={form.control}
               name="confirmPassword"
@@ -170,11 +99,7 @@ const ResetForm = () => {
                 <FormItem>
                   <FormLabel>{t("confirmPasswordField.label")}</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
-                    />
+                    <PasswordInput {...field} />
                   </FormControl>
                   <FormMessage className="text-destructive text-xs" />
                 </FormItem>
