@@ -1,0 +1,11 @@
+{
+    "desktop": "Escritorio",
+    "phone": "Teléfono",
+    "tablet": "Tableta",
+    "newProducts": "Nuevos productos",
+    "users": "Usuaros",
+    "audienceByAge": "Audiencia por edad",
+    "trafficByDevice": "Trafico por dispositivo",
+    "sinceLastMonth": "Desde el mes anterior",
+    "versusLastMonth": "vs mes anterior"
+}

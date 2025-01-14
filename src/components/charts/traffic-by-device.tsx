@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { Cell, Pie, PieChart } from "recharts";
 
 const data = [
@@ -10,15 +11,16 @@ const data = [
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export default function TrafficByDevice() {
+  const t = useTranslations("charts");
   return (
     <>
       <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700">
         <div>
           <h3 className="text-base font-normal text-gray-500 dark:text-gray-400">
-            TtrafficByDevice
+            {t("trafficByDevice")}
           </h3>
           <span className="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
-            Desktop
+            {t("desktop")}
           </span>
         </div>
       </div>
@@ -59,7 +61,7 @@ export default function TrafficByDevice() {
               d="M2 4.25A2.25 2.25 0 014.25 2h11.5A2.25 2.25 0 0118 4.25v8.5A2.25 2.25 0 0115.75 15h-3.105a3.501 3.501 0 001.1 1.677A.75.75 0 0113.26 18H6.74a.75.75 0 01-.484-1.323A3.501 3.501 0 007.355 15H4.25A2.25 2.25 0 012 12.75v-8.5zm1.5 0a.75.75 0 01.75-.75h11.5a.75.75 0 01.75.75v7.5a.75.75 0 01-.75.75H4.25a.75.75 0 01-.75-.75v-7.5z"
             ></path>
           </svg>
-          <h3 className="text-gray-500 dark:text-gray-400">Desktop</h3>
+          <h3 className="text-gray-500 dark:text-gray-400">{t("desktop")}</h3>
           <h4 className="text-xl font-bold dark:text-white">234k</h4>
           <p className="flex items-center text-sm text-gray-500 dark:text-gray-400">
             <span className="flex items-center mr-1.5 text-sm text-green-500 dark:text-green-400">
@@ -78,7 +80,7 @@ export default function TrafficByDevice() {
               </svg>
               4%
             </span>
-            VersusLastMonth
+            {t("versusLastMonth")}
           </p>
         </div>
         <div>
@@ -96,7 +98,7 @@ export default function TrafficByDevice() {
               d="M4 4a3 3 0 013-3h6a3 3 0 013 3v12a3 3 0 01-3 3H7a3 3 0 01-3-3V4zm4-1.5v.75c0 .414.336.75.75.75h2.5a.75.75 0 00.75-.75V2.5h1A1.5 1.5 0 0114.5 4v12a1.5 1.5 0 01-1.5 1.5H7A1.5 1.5 0 015.5 16V4A1.5 1.5 0 017 2.5h1z"
             ></path>
           </svg>
-          <h3 className="text-gray-500 dark:text-gray-400">Phone</h3>
+          <h3 className="text-gray-500 dark:text-gray-400">{t("phone")}</h3>
           <h4 className="text-xl font-bold dark:text-white">94k</h4>
           <p className="flex items-center text-sm text-gray-500 dark:text-gray-400">
             <span className="flex items-center mr-1.5 text-sm text-red-600 dark:text-red-500">
@@ -115,7 +117,7 @@ export default function TrafficByDevice() {
               </svg>
               1%
             </span>
-            VersusLastMonth
+            {t("versusLastMonth")}
           </p>
         </div>
         <div>
@@ -132,7 +134,7 @@ export default function TrafficByDevice() {
               d="M5 1a3 3 0 00-3 3v12a3 3 0 003 3h10a3 3 0 003-3V4a3 3 0 00-3-3H5zM3.5 4A1.5 1.5 0 015 2.5h10A1.5 1.5 0 0116.5 4v12a1.5 1.5 0 01-1.5 1.5H5A1.5 1.5 0 013.5 16V4zm5.25 11.5a.75.75 0 000 1.5h2.5a.75.75 0 000-1.5h-2.5z"
             ></path>
           </svg>
-          <h3 className="text-gray-500 dark:text-gray-400">Tablet</h3>
+          <h3 className="text-gray-500 dark:text-gray-400">{t("tablet")}</h3>
           <h4 className="text-xl font-bold dark:text-white">16k</h4>
           <p className="flex items-center text-sm text-gray-500 dark:text-gray-400">
             <span className="flex items-center mr-1.5 text-sm text-red-600 dark:text-red-500">
@@ -151,7 +153,7 @@ export default function TrafficByDevice() {
               </svg>
               0,6%
             </span>
-            VersusLastMonth
+            {t("versusLastMonth")}
           </p>
         </div>
       </div>

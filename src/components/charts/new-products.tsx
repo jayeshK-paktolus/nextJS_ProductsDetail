@@ -1,13 +1,15 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { Bar, BarChart, ResponsiveContainer } from "recharts";
 import data from "./data.json";
 
 export default function NewProducts() {
+  const t = useTranslations("charts");
   return (
     <>
       <div className="w-full">
         <h3 className="text-base font-normal text-gray-500 dark:text-gray-400">
-          New products
+          {t("newProducts")}
         </h3>
         <span className="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
           2,340
@@ -29,7 +31,7 @@ export default function NewProducts() {
             </svg>
             12.5%
           </span>
-          sinceLastMonth
+          {t("sinceLastMonth")}
         </p>
       </div>
       <div className="w-full h-24">
