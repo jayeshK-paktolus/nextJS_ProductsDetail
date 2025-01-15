@@ -1,26 +1,31 @@
 "use client";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
+import { trpc } from "@/lib/trpc/client";
 import { UpdateAccountFormSchema } from "@/schemas/account";
-import { trpc } from "@/lib/trpc/client"; // Assuming you're using trpc for API requests
-import { signOut } from "next-auth/react";
 
 type AccountFormValues = z.infer<typeof UpdateAccountFormSchema>;
 type AccountFormProps = { data: AccountFormValues };
 
 const AccountForm = ({ data }: AccountFormProps) => {
+  const t = useTranslations("accountSettings.account");
   const {
     register,
     handleSubmit,
@@ -41,8 +46,17 @@ const AccountForm = ({ data }: AccountFormProps) => {
   const onSubmit = async (formData: AccountFormValues) => {
     try {
       await mutation.mutateAsync(formData);
+      toast({
+        title: "Success",
+        description: "Your password was changed successfully.",
+        variant: "success",
+      });
     } catch (error) {
-      console.error("Error updating account:", error);
+      toast({
+        title: "Error",
+        description: t("errorMessage"),
+        variant: "destructive",
+      });
     }
   };
 
@@ -55,16 +69,16 @@ const AccountForm = ({ data }: AccountFormProps) => {
   return (
     <Card className="w-full h-full">
       <CardHeader className="mb-10 border-b border-gray-200">
-        <CardTitle>Account</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid w-full items-center grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="flex flex-col space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">{t("firstNameField.label")}</Label>
               <Input
                 id="firstName"
-                placeholder="Your first name"
+                placeholder="John"
                 {...register("firstName")}
               />
               {errors.firstName && (
@@ -75,10 +89,10 @@ const AccountForm = ({ data }: AccountFormProps) => {
             </div>
 
             <div className="flex flex-col space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("emailField.label")}</Label>
               <Input
                 id="email"
-                placeholder="Your email"
+                placeholder="john.doe@example.com"
                 {...register("email")}
               />
               {errors.email && (
@@ -87,10 +101,10 @@ const AccountForm = ({ data }: AccountFormProps) => {
             </div>
 
             <div className="flex flex-col space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">{t("lastNameField.label")}</Label>
               <Input
                 id="lastName"
-                placeholder="Your last name"
+                placeholder="Doe"
                 {...register("lastName")}
               />
               {errors.lastName && (
@@ -102,9 +116,9 @@ const AccountForm = ({ data }: AccountFormProps) => {
           </div>
 
           <CardFooter className="flex justify-start pl-0 pt-3 mt-5">
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit">{t("button")}</Button>
             <Button className="ml-5" type="button" onClick={handleSignOut}>
-              Sign out
+              {t("signOut")}
             </Button>
           </CardFooter>
         </form>

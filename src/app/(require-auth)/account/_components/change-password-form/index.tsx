@@ -1,27 +1,29 @@
 "use client";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
+import { toast } from "@/hooks/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { ChangeAccountPasswordFromSchema } from "@/schemas/account";
 import { PasswordInput } from "@/components/ui/password-input";
 import { trpc } from "@/lib/trpc/client";
-import { signOut } from "next-auth/react";
-import { toast } from "@/hooks/use-toast";
+import { ChangeAccountPasswordFromSchema } from "@/schemas/account";
 
 type ChangePasswordFormValues = z.infer<typeof ChangeAccountPasswordFromSchema>;
 
 const ChangePasswordForm = () => {
+  const t = useTranslations("accountSettings.security");
   const {
     register,
     handleSubmit,
@@ -38,7 +40,7 @@ const ChangePasswordForm = () => {
 
       toast({
         title: "Success",
-        description: "Your password was changed successfully.",
+        description: t("successMessage"),
         variant: "success",
         duration: 2000,
         onClose: () => {
@@ -48,10 +50,7 @@ const ChangePasswordForm = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred.",
+        description: error instanceof Error ? error.message : t("errorMessage"),
         variant: "destructive",
       });
     }
@@ -62,16 +61,16 @@ const ChangePasswordForm = () => {
   return (
     <Card className="w-full">
       <CardHeader className="mb-6 border-b border-gray-200">
-        <CardTitle>Security</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid w-full items-center gap-5">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="oldPassword">Old Password</Label>
+              <Label htmlFor="oldPassword">{t("oldPasswordField.label")}</Label>
               <PasswordInput
                 id="oldPassword"
-                placeholder="Enter old password"
+                placeholder={t("oldPasswordField.placeholder")}
                 disabled={isLoading}
                 {...register("oldPassword")}
               />
@@ -82,10 +81,10 @@ const ChangePasswordForm = () => {
               )}
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">New Password</Label>
+              <Label htmlFor="password">{t("passwordField.label")}</Label>
               <PasswordInput
                 id="password"
-                placeholder="Enter new password"
+                placeholder={t("passwordField.placeholder")}
                 disabled={isLoading}
                 {...register("password")}
               />
@@ -96,10 +95,12 @@ const ChangePasswordForm = () => {
               )}
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">
+                {t("confirmPasswordFiled.label")}
+              </Label>
               <PasswordInput
                 id="confirmPassword"
-                placeholder="Confirm password"
+                placeholder={t("confirmPasswordFiled.placeholder")}
                 disabled={isLoading}
                 {...register("confirmPassword")}
               />
@@ -116,7 +117,7 @@ const ChangePasswordForm = () => {
               disabled={isLoading}
               className={`btn ${isLoading ? "btn-disabled" : "btn-primary"}`}
             >
-              {isLoading ? "Updating..." : "Change Password"}
+              {isLoading ? t("button.loading") : t("button.label")}
             </Button>
           </CardFooter>
         </form>

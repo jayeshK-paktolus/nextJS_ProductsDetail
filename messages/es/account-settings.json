@@ -1,0 +1,39 @@
+{
+    "account": {
+        "title": "Cuenta",
+        "emailField": {
+            "label": "Tu correo electrónico"
+        },
+        "firstNameField": {
+            "label": "Nombre"
+        },
+        "lastNameField": {
+            "label": "Apellido"
+        },
+        "button": "Guardar cambios",
+        "errorMessage": "No se pudo guardar los cambios",
+        "successMessage": "Su información se ha actualizado correctamente.",
+        "signOut": "Cerrar sesión"
+    },
+    "security": {
+        "title": "Seguridad",
+        "oldPasswordField": {
+            "label": "Contraseña actual",
+            "placeholder": "Introducir contraseña antigua"
+        },
+        "passwordField": {
+            "label": "Nueva contraseña",
+            "placeholder": "Introducir nueva contraseña"
+        },
+        "confirmPasswordFiled": {
+            "label": "Confrmar nueva contraseña",
+            "placeholder": "Confirmar contraseña"
+        },
+        "button": {
+            "label":"Cambiar Contraseña",
+            "loading": "Guardando..."
+        },
+        "errorMessage": "No se pudo cambiar la contraseña",
+        "successMessage": "Su contraseña ha sido modificada correctamente."
+    }
+}

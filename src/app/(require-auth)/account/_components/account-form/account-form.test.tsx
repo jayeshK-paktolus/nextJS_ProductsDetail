@@ -1,7 +1,9 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import AccountForm from ".";
+import { toast } from "@/hooks/use-toast";
 import { trpc } from "@/lib/trpc/client";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+import AccountForm from ".";
 
 jest.mock("@/lib/trpc/client", () => ({
   trpc: {
@@ -13,6 +15,10 @@ jest.mock("@/lib/trpc/client", () => ({
   },
 }));
 
+jest.mock("@/hooks/use-toast", () => ({
+  toast: jest.fn(),
+}));
+
 const mockData = {
   firstName: "John",
   lastName: "Doe",
@@ -20,8 +26,30 @@ const mockData = {
 };
 
 describe("AccountForm", () => {
+  const messages = {
+    accountSettings: {
+      account: {
+        title: "Account",
+        emailField: {
+          label: "Your email",
+        },
+        firstNameField: {
+          label: "First name",
+        },
+        lastNameField: {
+          label: "Last name",
+        },
+        button: "Save changes",
+        errorMessage: "Unable to save changes",
+        successMessage: "Your information was updated successfully.",
+        signOut: "Sign Out",
+      },
+    },
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
+    (toast as jest.Mock).mockClear();
   });
 
   it("renders with initial data", () => {
@@ -30,7 +58,11 @@ describe("AccountForm", () => {
       mutateAsync: jest.fn(),
     });
 
-    render(<AccountForm data={mockData} />);
+    render(
+      <NextIntlClientProvider messages={messages} locale="en">
+        <AccountForm data={mockData} />
+      </NextIntlClientProvider>
+    );
 
     expect(screen.getByLabelText(/first name/i)).toHaveValue(
       mockData.firstName
@@ -44,7 +76,11 @@ describe("AccountForm", () => {
       mutateAsync: jest.fn(),
     });
 
-    render(<AccountForm data={mockData} />);
+    render(
+      <NextIntlClientProvider messages={messages} locale="en">
+        <AccountForm data={mockData} />
+      </NextIntlClientProvider>
+    );
 
     const firstNameInput = screen.getByLabelText(/first name/i);
     fireEvent.change(firstNameInput, { target: { value: "" } });
@@ -66,7 +102,11 @@ describe("AccountForm", () => {
       mutateAsync: mockMutateAsync,
     });
 
-    render(<AccountForm data={mockData} />);
+    render(
+      <NextIntlClientProvider messages={messages} locale="en">
+        <AccountForm data={mockData} />
+      </NextIntlClientProvider>
+    );
 
     const submitButton = screen.getByText(/save changes/i);
     fireEvent.click(submitButton);
@@ -78,27 +118,27 @@ describe("AccountForm", () => {
 
   it("handles API error during submission", async () => {
     const mockError = new Error("API Error");
-    const consoleSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
     const mockMutateAsync = jest.fn().mockRejectedValue(mockError);
 
     (trpc.users.updateAccount.useMutation as jest.Mock).mockReturnValue({
       mutateAsync: mockMutateAsync,
     });
 
-    render(<AccountForm data={mockData} />);
+    render(
+      <NextIntlClientProvider messages={messages} locale="en">
+        <AccountForm data={mockData} />
+      </NextIntlClientProvider>
+    );
 
     const submitButton = screen.getByText(/save changes/i);
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Error updating account:",
-        mockError
-      );
+      expect(toast).toHaveBeenCalledWith({
+        title: "Error",
+        description: "Unable to save changes",
+        variant: "destructive",
+      });
     });
-
-    consoleSpy.mockRestore();
   });
 });
