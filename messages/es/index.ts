@@ -1,15 +1,15 @@
 import accountSettings from "./account-settings.json";
+import charts from "./charts.json";
 import forgotPassword from "./forgot-password.json";
-import home from "./home.json";
 import languageSwitcher from "./language-switcher.json";
 import signIn from "./sign-in.json";
 
 const messages = {
-  home,
   languageSwitcher,
   signIn,
   forgotPassword,
   accountSettings,
+  charts,
 };
 
 export default messages;

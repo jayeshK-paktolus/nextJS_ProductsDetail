@@ -1,0 +1,11 @@
+{
+    "desktop": "Desktop",
+    "phone": "Phone",
+    "tablet": "Tablet",
+    "newProducts": "New products",
+    "users": "Users",
+    "audienceByAge": "Audience by age",
+    "trafficByDevice": "Traffic by device",
+    "sinceLastMonth": "Since last month",
+    "versusLastMonth": "vs last month"
+}

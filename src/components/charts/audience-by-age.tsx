@@ -1,12 +1,15 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 import data from "./data.json";
 
 export default function AudienceByAge() {
+  const t = useTranslations("charts");
+  
   return (
     <div className="w-full">
       <h3 className="mb-2 text-base font-normal text-gray-500 dark:text-gray-400">
-        AudienceByAge
+        {t("audienceByAge")}
       </h3>
       <div className="w-full h-28">
         <ResponsiveContainer width="100%" height="100%">
