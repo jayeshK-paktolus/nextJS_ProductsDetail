@@ -1,3 +1,4 @@
+import accountSettings from "./account-settings.json";
 import charts from "./charts.json";
 import forgotPassword from "./forgot-password.json";
 import languageSwitcher from "./language-switcher.json";
@@ -7,6 +8,7 @@ const messages = {
   languageSwitcher,
   signIn,
   forgotPassword,
+  accountSettings,
   charts,
 };
 
