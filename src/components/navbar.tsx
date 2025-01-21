@@ -32,7 +32,7 @@ const Navbar = ({
 
           <Link href="/" className="mr-8 flex">
             <Image
-              src="/vite.svg"
+              src="/logo.svg"
               alt="Dashboard Logo"
               className="mr-3"
               width={32}
