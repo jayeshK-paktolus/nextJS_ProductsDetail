@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslations } from "next-intl";
 
 function Filter({
   options,
@@ -16,11 +17,12 @@ function Filter({
   selected: string;
   handleChange: (value: string) => void;
 }) {
+  const t = useTranslations("products");
   return (
     <div className="w-60">
       <Select value={selected} onValueChange={handleChange}>
         <SelectTrigger>
-          <SelectValue placeholder="Filter by categories" />
+          <SelectValue placeholder={t("filterbycategories")} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>

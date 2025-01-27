@@ -6,6 +6,7 @@ import {
   ChevronRightIcon,
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
@@ -68,34 +69,40 @@ const PaginationPrevious = ({
   isOnlyIcon,
   className,
   ...props
-}: React.ComponentProps<typeof PaginationButton>) => (
-  <PaginationButton
-    aria-label="Go to previous page"
-    size="default"
-    className={cn("gap-1 pl-2.5", className)}
-    {...props}
-  >
-    <ChevronLeftIcon className="h-4 w-4" />
-    <span className={cn(isOnlyIcon && "hidden")}>Previous</span>
-  </PaginationButton>
-);
+}: React.ComponentProps<typeof PaginationButton>) => {
+  const t = useTranslations("products.pagination");
+  return (
+    <PaginationButton
+      aria-label={t("gotopreviouspage")}
+      size="default"
+      className={cn("gap-1 pl-2.5", className)}
+      {...props}
+    >
+      <ChevronLeftIcon className="h-4 w-4" />
+      <span className={cn(isOnlyIcon && "hidden")}>{t("previous")}</span>
+    </PaginationButton>
+  );
+};
 PaginationPrevious.displayName = "PaginationPrevious";
 
 const PaginationNext = ({
   isOnlyIcon,
   className,
   ...props
-}: React.ComponentProps<typeof PaginationButton>) => (
-  <PaginationButton
-    aria-label="Go to next page"
-    size="default"
-    className={cn("gap-1 pr-2.5", className)}
-    {...props}
-  >
-    <span className={cn(isOnlyIcon && "hidden")}>Next</span>
-    <ChevronRightIcon className="h-4 w-4" />
-  </PaginationButton>
-);
+}: React.ComponentProps<typeof PaginationButton>) => {
+  const t = useTranslations("products.pagination");
+  return (
+    <PaginationButton
+      aria-label={t("gotonextpage")}
+      size="default"
+      className={cn("gap-1 pr-2.5", className)}
+      {...props}
+    >
+      <span className={cn(isOnlyIcon && "hidden")}>{t("next")}</span>
+      <ChevronRightIcon className="h-4 w-4" />
+    </PaginationButton>
+  );
+};
 PaginationNext.displayName = "PaginationNext";
 
 const PaginationEllipsis = ({

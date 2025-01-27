@@ -1,0 +1,11 @@
+{
+    "searchbyproductname":"Buscar por nombre de producto",
+    "filterbycategories": "Filtrar por categorías",
+    "pagination":
+    {
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "gotonextpage": "Ir a la siguiente página",
+        "gotopreviouspage": "Ir a la página anterior"
+    }
+}
