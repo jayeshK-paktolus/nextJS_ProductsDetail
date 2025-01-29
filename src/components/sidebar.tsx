@@ -2,8 +2,10 @@ import { ChartPie, SquareChartGantt, UserRoundCog } from "lucide-react";
 import Link from "next/link";
 import LanguageSwitcher from "./language-switcher";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
+  const t = useTranslations("sidebar");
   return (
     <div
       className={cn(
@@ -20,7 +22,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                 href="/dashboard"
               >
                 <ChartPie className="text-gray-500 transition-colors duration-[75ms] m-2 hover:text-gray-950 " />
-                Dashboard
+                {t("dashboard")}
               </Link>
             </li>
             <li className="hover:bg-gray-100 rounded">
@@ -29,7 +31,7 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
                 href="/products"
               >
                 <SquareChartGantt className="text-gray-500 transition-colors duration-[75ms] m-2 hover:text-gray-950" />
-                Products
+                {t("products")}
               </Link>
             </li>
           </ul>
