@@ -1,8 +1,8 @@
+import { cn } from "@/lib/utils";
 import { ChartPie, SquareChartGantt, UserRoundCog } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import LanguageSwitcher from "./language-switcher";
-import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
 
 const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
   const t = useTranslations("sidebar");
