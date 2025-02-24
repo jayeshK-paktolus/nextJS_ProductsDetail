@@ -1,5 +1,6 @@
-import { auth } from "@/app/api/auth/[...nextauth]/route";
 import axios from "axios";
+
+import { auth } from "@/auth";
 
 const backendInstance = axios.create({
   baseURL: process.env.BACKEND_URL,
