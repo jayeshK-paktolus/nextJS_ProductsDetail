@@ -1,4 +1,3 @@
-import { HttpStatusCode } from "axios";
 import {
     GetServerSidePropsContext,
     NextApiRequest,
@@ -6,8 +5,6 @@ import {
 } from "next";
 import { getServerSession, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-import backendInstance from "@/lib/backend-instance";
 import { SingInFormSchema } from "@/schemas/sign-in";
 
 export const nextAuthOptions: NextAuthOptions = {
@@ -25,24 +22,24 @@ export const nextAuthOptions: NextAuthOptions = {
         }
 
         try {
-          const {
-            data: { email, password },
-          } = validatedFields;
+          // const {
+          //   data: { email, password },
+          // } = validatedFields;
 
-          const response = await backendInstance.post<{
-            accessToken: string;
-            refreshToken: string;
-          }>("/auth/sign-in", {
-            username: email,
-            password: password,
-          });
+          // const response = await backendInstance.post<{
+          //   accessToken: string;
+          //   refreshToken: string;
+          // }>("/auth/sign-in", {
+          //   username: "jayesh.kulkarni@paktolus.com",
+          //   password: "1234",
+          // });
 
-          if (response.status !== HttpStatusCode.Ok) return null;
+          // if (response.status !== HttpStatusCode.Ok) return null;
 
           return {
             id: new Date().getTime().toString(),
-            accessToken: response.data.accessToken,
-            refreshToken: response.data.refreshToken,
+            accessToken: "",
+            refreshToken: "",
           };
         } catch (error) {
           throw error;

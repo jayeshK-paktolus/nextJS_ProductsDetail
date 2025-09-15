@@ -1,10 +1,13 @@
 import ProductsList from "./_component/list";
+import Layout from "./Layout";
 
 function ProductsPage() {
   return (
-    <section>
-      <ProductsList />
-    </section>
+    <Layout>
+      <section>
+        <ProductsList />
+      </section>
+    </Layout>
   );
 }
 

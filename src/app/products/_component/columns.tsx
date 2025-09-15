@@ -1,6 +1,15 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+
+export type Review = {
+  rating:number,
+  comment : string,
+  reviewerName: string,
+  reviewerEmail: string,
+  date: string
+}
 
 export type Product = {
   id: number;
@@ -14,13 +23,34 @@ export type Product = {
   category: string;
   thumbnail: string;
   images: string[];
+  warrantyInformation: string;
+  returnPolicy:string;
+  reviews: Review[];
 };
 
 export const columns: ColumnDef<Product>[] = [
   {
-    accessorKey: "title",
-    header: "Title",
+  accessorKey: "title",
+  header: "Title",
+  cell: ({ row }) => {
+    const product = row.original;
+
+    // Child component can use hooks
+    const TitleButton = () => {
+      const router = useRouter();
+      return (
+        <button
+          onClick={() => router.push(`/products/${product.id}`)}
+          className="text-blue-600 hover:text-blue-800 hover:underline text-left"
+        >
+          {product.title}
+        </button>
+      );
+    };
+
+    return <TitleButton />;
   },
+},
   {
     accessorKey: "price",
     header: "Price",
@@ -40,6 +70,14 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "brand",
     header: "Brand",
+  },
+  {
+    accessorKey: "warrantyInformation",
+    header: "Warranty",
+  },
+  {
+    accessorKey:'returnPolicy',
+    header:'Return Policy'
   },
   {
     accessorKey: "category",

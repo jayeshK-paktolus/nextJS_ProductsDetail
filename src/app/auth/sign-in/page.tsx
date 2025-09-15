@@ -59,7 +59,7 @@ export default function SignInPage() {
   const isLoading = form.formState.isSubmitting || form.formState.isLoading;
 
   return (
-    <div className="flex items-center justify-center h-screen w-full bg-gray-100 overflow-hidden relative">
+    <div className="flex flex-col items-center justify-center h-screen w-full bg-gray-100 overflow-hidden relative">
       <Card className="pt-2 pb-2 border border-gray-200  min-w-[300px] max-w-[500px] mx-auto sm:min-w-[450px]">
         <CardHeader>
           <CardTitle className="text-2xl pt-0 mb-2 font-normal justify-center flex">
@@ -125,6 +125,14 @@ export default function SignInPage() {
           </Form>
         </CardContent>
       </Card>
+      <div className="text-center mt-4">
+        <p>
+          Don&apos; have an account?
+          <Link href="/auth/sign-up" className="underline text-blue-600">
+            Register Now
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

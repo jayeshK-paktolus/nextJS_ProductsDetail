@@ -5,6 +5,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Providers } from "@/components/provider";
+import { CartProvider } from "@/app/context/CartContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,8 +38,12 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-800`}
       >
         <NextIntlClientProvider messages={messages}>
-          <TRPCProvider>{children}</TRPCProvider>
-          <Toaster />
+          <Providers>
+            <CartProvider>
+              <TRPCProvider>{children}</TRPCProvider>
+            </CartProvider>
+            <Toaster />
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>
