@@ -126,67 +126,71 @@ function ProductsList() {
     indexOfLastProduct
   );
 
-  // const handleClickCard = (productId: number) => {
-  //   router.push(`/products/${productId}`);
-  // }
-
   return (
     <div className="w-full h-full flex flex-col gap-8">
-      {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {currentProducts.map((product) => (
-          <Card
-            key={product.id}
-            className="hover:shadow-lg transition h-full flex flex-col"
-            //onClick={() => handleClickCard(product.id)}
-          >
-            <CardHeader>
-              <Image
-                src={product.thumbnail}
-                alt={product.title}
-                className="w-full h-55 object-cover rounded-t-lg"
-                width={350}
-                height={400}
-              />
-            </CardHeader>
-
-            <CardContent className="flex-1 p-4">
-              <h3 className="text-lg font-semibold mb-2 truncate">
-                {product.title}
-              </h3>
-
-              <div className="flex items-baseline space-x-2">
-                <p className="text-green-700 font-medium text-lg">
-                  ${product.price.toFixed(2)}
-                </p>
-                <p className="text-sm text-gray-500 mt-1">
-                  {product.discountPercentage}% Off
-                </p>
-              </div>
-            </CardContent>
-
-            <CardFooter className="p-4 pt-0 flex justify-end">
-              <Link
-                href={`/products/${product.id}`}
-                className="text-blue-500 hover:underline"
+      {currentProducts.length === 0 ? (
+        <p className="text-center text-gray-600 text-lg mt-10">
+          No products found matching your filter criteria.
+        </p>
+      ) : (
+        <>
+          {/* Product Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {currentProducts.map((product) => (
+              <Card
+                key={product.id}
+                className="hover:shadow-lg transition h-full flex flex-col"
               >
-                View Details
-              </Link>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+                <CardHeader>
+                  <Image
+                    src={product.thumbnail}
+                    alt={product.title}
+                    className="w-full h-55 object-cover rounded-t-lg"
+                    width={350}
+                    height={400}
+                  />
+                </CardHeader>
 
-      {/* Pagination */}
-      {totalPages !== 0 && (
-        <Pagination
-          totalNumberOfPages={totalPages}
-          currentPage={currentPage}
-          changePage={setCurrentPage}
-        />
+                <CardContent className="flex-1 p-4">
+                  <h3 className="text-lg font-semibold mb-2 truncate">
+                    {product.title}
+                  </h3>
+
+                  <div className="flex items-baseline space-x-2">
+                    <p className="text-green-700 font-medium text-lg">
+                      ${product.price.toFixed(2)}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {product.discountPercentage}% Off
+                    </p>
+                  </div>
+                </CardContent>
+
+                <CardFooter className="p-4 pt-0 flex justify-end">
+                  <Link
+                    href={`/products/${product.id}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    View Details
+                  </Link>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages !== 0 && (
+            <Pagination
+              totalNumberOfPages={totalPages}
+              currentPage={currentPage}
+              changePage={setCurrentPage}
+            />
+          )}
+        </>
       )}
     </div>
   );
 }
 
 export default ProductsList;
+

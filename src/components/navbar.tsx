@@ -1,9 +1,10 @@
 "use client";
 
-import { User } from "lucide-react";
+import { Heart, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
+import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -67,16 +68,28 @@ const Navbar = () => {
             )}
           </div>
 
-          <div className="flex justify-end items-center">
+          <div className="flex justify-end items-center gap-3">
+            <Link href={'/fav'}>
+              <div className="w-8 h-8 flex items-center justify-center rounded-full">
+                <Heart className="cursor-pointer" />
+              </div>
+            </Link>
+
             {session?.user ? (
               <div className="flex items-center space-x-4">
-                <User className="cursor-pointer" />
-                <button
-                  onClick={() => signOut()}
-                  className="text-sm text-red-500 hover:underline"
-                >
-                  Logout
-                </button>
+                <Popover>
+                  <PopoverTrigger>
+                    <User className="cursor-pointer" />
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <button
+                      onClick={() => signOut()}
+                      className="text-sm text-red-500 hover:underline"
+                    >
+                      Logout
+                    </button>
+                  </PopoverContent>
+                </Popover>
               </div>
             ) : (
               <div className="flex items-center space-x-4">

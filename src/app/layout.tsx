@@ -7,6 +7,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "@/components/provider";
 import { CartProvider } from "@/app/context/CartContext";
+import { FavProvider } from "./context/FavContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -39,9 +40,11 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider messages={messages}>
           <Providers>
+            <FavProvider>
             <CartProvider>
               <TRPCProvider>{children}</TRPCProvider>
             </CartProvider>
+            </FavProvider>
             <Toaster />
           </Providers>
         </NextIntlClientProvider>

@@ -8,13 +8,15 @@ import { popularProducts } from "@/assets/popular-products";
 import Link from "next/link";
 import Banner from "@/components/ui/banner";
 import Footer from "@/components/ui/footer";
-import { ShoppingCart, Check } from "lucide-react";
+import { ShoppingCart, Check, Heart } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { toast } from "@/hooks/use-toast";
 import Image from "next/image";
+import { useFav } from "../context/FavContext";
 
 export default function Home() {
   const { removeFromCart, addToCart, cart } = useCart();
+  const { removeFromFav, addToFav, favorites } = useFav();
 
   type Product = {
     id: number;
@@ -51,6 +53,33 @@ export default function Home() {
     }
   };
 
+  const handleFavToggle = (product : Product) => {
+   const isInFav = favorites.find((item) => item.id === product.id);
+
+    if (isInFav) {
+      removeFromFav(product.id);
+
+      toast({
+        title: "Product Removed from Favorites 🗑️",
+        description: `${product.title} has been removed from your favorites.`,
+        duration: 3000,
+      });
+    } else {
+      addToFav({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        thumbnail: product.thumbnail,
+      });
+
+      toast({
+        title: "Product Added to Favorites 🛒",
+        description: `${product.title} has been added to your favorites.`,
+        duration: 3000,
+      });
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -64,6 +93,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {popularProducts.map((product) => {
             const isInCart = cart.some((item) => item.id === product.id);
+            const isInFav = favorites.some((item) => item.id === product.id)
 
             return (
               <Link href={`/products/${product.id}`} key={product.id}>
@@ -88,6 +118,20 @@ export default function Home() {
                     </p>
 
                     <div className="flex space-x-2">
+                      <button
+                        className="w-8 h-8 flex rounded-full items-center justify-center transition"
+                        
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleFavToggle(product)
+                      }}
+                      >
+                        {isInFav ? (
+                          <Heart color="red" size={18} />
+                        ) : (
+                          <Heart size={18} />
+                        )}
+                      </button>
                       <button
                         className={`w-8 h-8 rounded-full ${
                           isInCart
@@ -127,8 +171,7 @@ export default function Home() {
           ].map((category) => (
             <Link href={`/products?category=${category}`} key={category}>
               <Card className="hover:shadow-lg transition-transform transform hover:-translate-y-1 flex flex-col">
-                <div className="relative h-full w-full overflow-hidden rounded-t-lg bg-gray-200">
-                </div>
+                <div className="relative h-full w-full overflow-hidden rounded-t-lg bg-gray-200"></div>
 
                 <div className="p-4 flex flex-col flex-1">
                   <h3 className="font-semibold text-lg text-gray-900">

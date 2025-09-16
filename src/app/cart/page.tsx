@@ -13,7 +13,7 @@ const Cart = () => {
     <>
       <Navbar />
 
-      <section className="w-11/12 mx-auto py-10 mt-14">
+      <section className="w-11/12 mx-auto py-3 mt-16">
         <h1 className="text-3xl font-bold mb-8 text-gray-800">Your Cart</h1>
 
         {cart.length === 0 ? (
