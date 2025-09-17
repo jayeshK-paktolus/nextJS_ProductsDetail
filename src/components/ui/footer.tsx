@@ -3,7 +3,7 @@ import React from "react";
 const Footer = () => {
   return (
     <footer>
-      <div className="flex flex-col md:flex-row items-start justify-center gap-10 py-10 border-b border-gray-500/30 text-gray-500">
+      <div className="w-11/12 mx-auto flex flex-col md:flex-row items-start justify-center gap-10 py-10 border-b border-gray-500/30 text-gray-500">
         <div>
           {/* <Image className="w-28 md:w-32" src={assets.logo} alt="logo" /> */}
           <p className="text-sm">
@@ -19,13 +19,13 @@ const Footer = () => {
             <h2 className="font-medium text-gray-900 mb-5">Company</h2>
             <ul className="text-sm space-y-2">
               <li>
-                <a className="hover:underline transition" href="#">Home</a>
+                <a className="hover:underline transition" href="/">Home</a>
               </li>
               <li>
-                <a className="hover:underline transition" href="#">About us</a>
+                <a className="hover:underline transition" href="/about-us">About us</a>
               </li>
               <li>
-                <a className="hover:underline transition" href="#">Contact us</a>
+                <a className="hover:underline transition" href="/products">Products</a>
               </li>
               <li>
                 <a className="hover:underline transition" href="#">Privacy policy</a>

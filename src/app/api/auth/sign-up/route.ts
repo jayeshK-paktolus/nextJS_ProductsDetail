@@ -3,7 +3,7 @@ import { z } from "zod";
 
 // Simple signup schema validation
 const SignUpSchema = z.object({
-    fullname: z.string().min(1, "Full name is required"),
+  fullname: z.string().min(1, "Full name is required"),
   email: z.string().email(),
   password: z.string().min(6),
 });

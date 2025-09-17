@@ -53,8 +53,8 @@ export default function Home() {
     }
   };
 
-  const handleFavToggle = (product : Product) => {
-   const isInFav = favorites.find((item) => item.id === product.id);
+  const handleFavToggle = (product: Product) => {
+    const isInFav = favorites.find((item) => item.id === product.id);
 
     if (isInFav) {
       removeFromFav(product.id);
@@ -78,7 +78,7 @@ export default function Home() {
         duration: 3000,
       });
     }
-  }
+  };
 
   return (
     <>
@@ -93,7 +93,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {popularProducts.map((product) => {
             const isInCart = cart.some((item) => item.id === product.id);
-            const isInFav = favorites.some((item) => item.id === product.id)
+            const isInFav = favorites.some((item) => item.id === product.id);
 
             return (
               <Link href={`/products/${product.id}`} key={product.id}>
@@ -120,11 +120,10 @@ export default function Home() {
                     <div className="flex space-x-2">
                       <button
                         className="w-8 h-8 flex rounded-full items-center justify-center transition"
-                        
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleFavToggle(product)
-                      }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleFavToggle(product);
+                        }}
                       >
                         {isInFav ? (
                           <Heart color="red" size={18} />
@@ -191,9 +190,8 @@ export default function Home() {
         </Link>
 
         <Banner />
-
-        <Footer />
       </section>
+      <Footer />
     </>
   );
 }

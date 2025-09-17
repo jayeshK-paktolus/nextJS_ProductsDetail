@@ -5,13 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
+import { useFav } from "@/app/context/FavContext";
 
 const Navbar = () => {
   const { data: session } = useSession();
+  const { favorites } = useFav();
 
   return (
     <header>
-      <nav className="m-0.5 bg-white border-b border-gray-200 p-2.5 fixed top-0 left-0 right-0 z-50">
+      <nav className=" bg-white border-b border-gray-200 p-2.5 fixed top-0 left-0 right-0 z-50 rounded-b-2xl shadow-lg">
         <div className="flex flex-wrap justify-between items-center p-0.5">
           <div className="flex justify-start items-center">
             <Link href="/" className="mr-8 flex">
@@ -70,9 +72,15 @@ const Navbar = () => {
 
           <div className="flex justify-end items-center gap-3">
             <Link href={'/fav'}>
-              <div className="w-8 h-8 flex items-center justify-center rounded-full">
+              <div className="relative w-8 h-8 flex items-center justify-center rounded-full">
                 <Heart className="cursor-pointer" />
+                {favorites.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {favorites.length}
+                  </span>
+                )}
               </div>
+
             </Link>
 
             {session?.user ? (
