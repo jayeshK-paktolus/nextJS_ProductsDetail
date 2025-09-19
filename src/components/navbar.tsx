@@ -6,15 +6,32 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
 import { useFav } from "@/app/context/FavContext";
+import { useCart } from "@/app/context/CartContext";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const { data: session } = useSession();
+  const pathname = usePathname();
   const { favorites } = useFav();
+  const { cart } = useCart();
+
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/products", label: "Products" },
+    { href: "/cart", label: "Cart" },
+    { href: "/about-us", label: "About Us" },
+  ];
+
+  if (session?.user) {
+    links.push({ href: "/dashboard", label: "Dashboard" });
+    links.push({ href: "/admin", label: "Admin" });
+  }
 
   return (
     <header>
-      <nav className=" bg-white border-b border-gray-200 p-2.5 fixed top-0 left-0 right-0 z-50 rounded-b-2xl shadow-lg">
+      <nav className="bg-white border-b border-gray-200 p-2.5 fixed top-0 left-0 right-0 z-50 rounded-b-2xl shadow-lg">
         <div className="flex flex-wrap justify-between items-center p-0.5">
+          {/* Logo */}
           <div className="flex justify-start items-center">
             <Link href="/" className="mr-8 flex">
               <Image
@@ -27,62 +44,56 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="flex justify-center flex-1">
-            <Link
-              href="/"
-              className="font-medium mx-4 text-black hover:scale-105 transform transition"
-            >
-              Home
-            </Link>
-            <Link
-              href="/products"
-              className="font-medium mx-4 text-black hover:scale-105 transform transition"
-            >
-              Products
-            </Link>
-            <Link
-              href="/cart"
-              className="font-medium mx-4 text-black hover:scale-105 transform transition"
-            >
-              Cart
-            </Link>
-            <Link
-              href="/about-us"
-              className="font-medium mx-4 text-black hover:scale-105 transform transition"
-            >
-              About us
-            </Link>
-            {session?.user && (
-              <>
+          {/* Nav Links */}
+          <div className="flex justify-center flex-1 gap-2">
+            {links.map(({ href, label }) => {
+              const isActive = pathname === href;
+              return (
                 <Link
-                  href="/dashboard"
-                  className="font-medium mx-4 text-black hover:scale-105 transform transition"
+                  key={href}
+                  href={href}
+                  className={`relative font-medium px-3 py-1 rounded-md transition ${
+                    isActive
+                      ? "text-blue-600 font-semibold bg-blue-50"
+                      : "text-black hover:scale-105 hover:text-blue-500"
+                  }`}
                 >
-                  Dashboard
+                  {label}
+
+                  {/* Cart badge */}
+                  {href === "/cart" && cart.length > 0 && (
+                    <span className="absolute -top-1 -right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                      {cart.length}
+                    </span>
+                  )}
                 </Link>
-                <Link
-                  href="/admin"
-                  className="font-medium mx-4 text-black hover:scale-105 transform transition"
-                >
-                  Admin
-                </Link>
-              </>
-            )}
+              );
+            })}
           </div>
 
-          <div className="flex justify-end items-center gap-3">
-            <Link href={'/fav'}>
-              <div className="relative w-8 h-8 flex items-center justify-center rounded-full">
-                <Heart className="cursor-pointer" />
+          {/* Right Side: Favorites + User */}
+          <div className="flex justify-end items-center gap-4">
+            {/* Favorites (Heart icon only) */}
+            <Link href="/fav">
+              <div
+                className={`relative w-8 h-8 flex items-center justify-center rounded-full transition ${
+                  pathname === "/fav" ? "bg-blue-50 text-blue-600" : ""
+                }`}
+              >
+                <Heart
+                  className={`cursor-pointer ${
+                    pathname === "/fav" ? "text-blue-600" : "text-black"
+                  }`}
+                />
                 {favorites.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                     {favorites.length}
                   </span>
                 )}
               </div>
-
             </Link>
 
+            {/* User */}
             {session?.user ? (
               <div className="flex items-center space-x-4">
                 <Popover>

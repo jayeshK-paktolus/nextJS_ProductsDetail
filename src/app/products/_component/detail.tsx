@@ -5,9 +5,10 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Check } from "lucide-react";
+import { Check, Heart } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "@/hooks/use-toast";
+import { useFav } from "@/app/context/FavContext";
 
 interface ProductDetailProps {
   product: Product;
@@ -16,14 +17,18 @@ interface ProductDetailProps {
 function ProductDetail({ product }: ProductDetailProps) {
   const router = useRouter();
   const { removeFromCart, addToCart, cart } = useCart();
+  const { addToFav, removeFromFav, favorites } = useFav();
   const [mainImage, setMainImage] = useState(product.thumbnail);
   const [isInCart, setIsInCart] = useState(false);
+  const [isInFav, setIsInFav] = useState(false);
 
   // Check if product is already in cart
   useEffect(() => {
     const itemInCart = cart.find((item) => item.id === product.id);
     setIsInCart(!!itemInCart);
-  }, [cart, product.id]);
+    const itemInFav = favorites.find((item) => item.id === product.id);
+    setIsInFav(!!itemInFav);
+  }, [cart, favorites, product.id]);
 
   const handleAddToCart = () => {
     if (isInCart) {
@@ -53,6 +58,31 @@ function ProductDetail({ product }: ProductDetailProps) {
     }
   };
 
+  const handleAddToFav = () => {
+    if (isInFav) {
+      removeFromFav(product.id);
+
+      toast({
+        title: "Product Removed from Favorites",
+        description: `${product.title} has been removed from your Favorites.`,
+        duration: 3000,
+      });
+    } else {
+      // Add to cart
+      addToFav({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        thumbnail: product.thumbnail,
+      });
+
+      toast({
+        title: "Product Added to Favorites",
+        description: `${product.title} has been added to your Favorites.`,
+        duration: 3000,
+      });
+    }
+  };
   return (
     <div className="w-screen max-w-5xl mx-auto">
       <Button variant="outline" onClick={() => router.back()} className="mb-6">
@@ -87,6 +117,13 @@ function ProductDetail({ product }: ProductDetailProps) {
             ))}
           </div>
           <div className="flex mt-4 gap-2">
+            <Button onClick={handleAddToFav}>
+                        {isInFav ? (
+                          <Heart color="red" size={18} />
+                        ) : (
+                          <Heart size={18} />
+                        )}
+            </Button>
             <Button
               disabled={product.stock === 0}
               className="w-full flex items-center justify-center gap-2"

@@ -50,7 +50,7 @@ export default function AddProductForm() {
   };
 
   return (
-    <div className="p-5 max-w-xxl mt-14">
+    <div className="p-2 max-w-xxl">
       <h1 className="text-xl mb-4">Add New Product</h1>
       <Form {...form}>
         <form

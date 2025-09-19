@@ -67,17 +67,9 @@
 
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { Pagination } from "@/components/pagination/pagination";
 import { mockProducts } from "../mock-products";
-import Image from "next/image";
+import ProductCard from "@/components/ui/product-card";
 
 function ProductsList() {
   const searchParams = useSearchParams();
@@ -137,44 +129,7 @@ function ProductsList() {
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentProducts.map((product) => (
-              <Card
-                key={product.id}
-                className="hover:shadow-lg transition h-full flex flex-col"
-              >
-                <CardHeader>
-                  <Image
-                    src={product.thumbnail}
-                    alt={product.title}
-                    className="w-full h-55 object-cover rounded-t-lg"
-                    width={350}
-                    height={400}
-                  />
-                </CardHeader>
-
-                <CardContent className="flex-1 p-4">
-                  <h3 className="text-lg font-semibold mb-2 truncate">
-                    {product.title}
-                  </h3>
-
-                  <div className="flex items-baseline space-x-2">
-                    <p className="text-green-700 font-medium text-lg">
-                      ${product.price.toFixed(2)}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {product.discountPercentage}% Off
-                    </p>
-                  </div>
-                </CardContent>
-
-                <CardFooter className="p-4 pt-0 flex justify-end">
-                  <Link
-                    href={`/products/${product.id}`}
-                    className="text-blue-500 hover:underline"
-                  >
-                    View Details
-                  </Link>
-                </CardFooter>
-              </Card>
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
 

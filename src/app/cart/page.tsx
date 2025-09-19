@@ -3,11 +3,10 @@
 import { useCart } from "@/app/context/CartContext";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/navbar";
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
+import ProductCard from "@/components/ui/product-card";
 
 const Cart = () => {
-  const { cart, removeFromCart, clearCart } = useCart();
+  const { cart, clearCart } = useCart();
 
   return (
     <>
@@ -24,39 +23,7 @@ const Cart = () => {
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
               {cart.map((item) => (
-                <Card
-                  key={item.id}
-                  className="hover:shadow-lg transition-transform transform hover:-translate-y-1 flex flex-col"
-                >
-                  <div className="relative h-48 w-full overflow-hidden rounded-t-lg bg-gray-200">
-                    <Image
-                      src={item.thumbnail}
-                      alt={item.title}
-                      width={500}
-                      height={500}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  <div className="p-4 flex flex-col flex-1">
-                    <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                      {item.title}
-                    </h3>
-
-                    <p className="font-bold text-orange-600 text-xl mb-4">
-                      ${item.price}
-                    </p>
-
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => removeFromCart(item.id)}
-                      className="mt-auto"
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                </Card>
+                <ProductCard key={item.id} product={item} />
               ))}
             </div>
 

@@ -3,50 +3,10 @@
 import { useFav } from "@/app/context/FavContext";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/navbar";
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
-import { toast } from "@/hooks/use-toast";
-import { useCart } from "../context/CartContext";
-import { Check, ShoppingCart } from "lucide-react";
-
-type Product = {
-  id: number;
-  title: string;
-  price: number;
-  thumbnail: string;
-};
+import ProductCard from "@/components/ui/product-card";
 
 const Fav = () => {
-  const { favorites, removeFromFav, clearFav } = useFav();
-  const { cart, addToCart, removeFromCart } = useCart();
-
-  const handleCartToggle = (product: Product) => {
-    const isInCart = cart.find((item) => item.id === product.id);
-
-    if (isInCart) {
-      removeFromCart(product.id);
-
-      toast({
-        title: "Product Removed from Cart 🗑️",
-        description: `${product.title} has been removed from your cart.`,
-        duration: 3000,
-      });
-    } else {
-      addToCart({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        thumbnail: product.thumbnail,
-        quantity: 1,
-      });
-
-      toast({
-        title: "Product Added to Cart 🛒",
-        description: `${product.title} has been added to your cart.`,
-        duration: 3000,
-      });
-    }
-  };
+  const { favorites, clearFav } = useFav();
 
   return (
     <>
@@ -64,71 +24,9 @@ const Fav = () => {
         ) : (
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {favorites.map((item) => {
-                const isInCart = cart.find((cartItem) => cartItem.id === item.id);
-                return (
-                  <Card
-                    key={item.id}
-                    className="hover:shadow-lg transition-transform transform hover:-translate-y-1 flex flex-col"
-                  >
-                    <div className="relative h-48 w-full overflow-hidden rounded-t-lg bg-gray-200">
-                      <Image
-                        src={item.thumbnail}
-                        alt={item.title}
-                        width={500}
-                        height={500}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    <div className="p-4 flex flex-col flex-1">
-                      <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                        {item.title}
-                      </h3>
-
-                      <p className="font-bold text-orange-600 text-xl mb-4">
-                        ${item.price}
-                      </p>
-
-                      <Button
-                        size="sm"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleCartToggle(item);
-                        }}
-                        className="mt-auto mb-1"
-                      >
-                        {isInCart ? (
-                          <p className="flex items-center justify-betweenify gap-1">
-                            <Check size={18} />
-                            Added To Cart
-                          </p>
-                        ) : (
-                          <p className="flex items-center justify-betweenify gap-1">
-                            <ShoppingCart size={18} />
-                            Add To Cart
-                          </p>
-                        )}
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => {
-                          removeFromFav(item.id);
-                          toast({
-                            title: "Removed from Favorites",
-                            description: `${item.title} has been removed from your favorites.`,
-                            duration: 3000,
-                          });
-                        }}
-                        className="mt-auto"
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  </Card>
-                );
-              })}
+              {favorites.map((item) => (
+                <ProductCard key={item.id} product={item} />
+              ))}
             </div>
 
             <div className="mt-8 text-center">
