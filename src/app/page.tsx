@@ -16,7 +16,6 @@ import Footer from "@/components/ui/footer";
 import ProductCard from "@/components/ui/product-card";
 
 export default function Home() {
-
   return (
     <>
       <Navbar />
@@ -27,9 +26,14 @@ export default function Home() {
           Popular Products
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="flex gap-4 overflow-x-auto pb-3 sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 sm:gap-4 scrollbar-hide">
           {popularProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <div
+              key={product.id}
+              className="min-w-[250px] sm:min-w-0 flex-shrink-0"
+            >
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
 

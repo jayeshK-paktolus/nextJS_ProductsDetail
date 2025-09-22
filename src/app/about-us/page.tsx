@@ -9,52 +9,58 @@ const AboutUs = () => {
   return (
     <>
       <Navbar />
-      <div className="min-w-full mx-auto mt-12">
-        <div className="bg-[#E6E9F2] w-full flex flex-col-reverse md:flex-row items-center justify-between px-6 py-6">
-          <div className="w-5/12">
-            <h2 className="text-3xl font-bold text-gray-800">About Us</h2>
-            <p className="text-xl my-2 text-gray-600">
+      <div className="w-full mx-auto mt-12">
+        <div className="bg-[#E6E9F2] w-full flex flex-col-reverse md:flex-row items-center justify-between px-6 py-8 md:py-12 md:px-12">
+          <div className="w-full md:w-1/2 space-y-4 md:pr-6 text-center md:text-left">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
+              About Us
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600">
               lorem ipsum company and culture are a lot like our product. They
               are crafted, not cobbled, for a delightful experience.
             </p>
           </div>
-          <div>
+
+          <div className="w-full md:w-1/2 flex justify-center">
             <Image
-              className="rounded-2xl"
+              className="rounded-2xl w-full max-w-[450px] h-auto"
               src={assets.Hubspotters}
-              alt="image"
+              alt="About Us Image"
               width={450}
               height={300}
             />
           </div>
         </div>
-        <div className="w-11/12 mt-7 mx-auto justify-between items-center flex flex-col-reverse md:flex-row gap-12">
-          <div className="flex-shrink-0">
+
+        <div className="w-11/12 mt-12 mx-auto flex flex-col-reverse md:flex-row gap-8 md:gap-12 items-center">
+          <div className="w-full md:w-1/2 flex justify-center">
             <Image
               src={assets.grow_better}
-              alt="image"
+              alt="Grow Better"
               width={480}
               height={700}
-              className="rounded-2xl"
+              className="rounded-2xl w-full max-w-[480px] h-auto"
             />
           </div>
-          <div className="flex flex-col space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800">
+
+          <div className="w-full md:w-1/2 flex flex-col space-y-4 text-center md:text-left">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
               Our Mission: Helping Millions of Organizations Grow Better
             </h2>
-            <p className="text-gray-600">
+            <p className="text-base sm:text-lg text-gray-600">
               We believe not just in growing bigger, but in growing better. And
               growing better means aligning the success of your own business
               with the success of your customers. Win-win!
             </p>
           </div>
         </div>
-        <div className="min-w-full mt-20 bg-[#E6E9F2] py-12 flex flex-col items-center">
-          <h2 className="text-3xl font-bold text-gray-800 mb-10">
+
+        <div className="w-full mt-20 bg-[#E6E9F2] py-12 flex flex-col items-center px-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-10 text-center">
             Our Numbers
           </h2>
 
-          <div className="flex flex-col md:flex-row gap-20 justify-center items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
             {[
               { image: assets.TeamConnection, text: "700+ Employees" },
               { image: assets.customers, text: "268,000+ Customers" },
@@ -62,16 +68,16 @@ const AboutUs = () => {
             ].map((item, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl shadow p-4 flex flex-col items-center w-72"
+                className="bg-white rounded-2xl shadow p-6 flex flex-col items-center w-full max-w-[280px] mx-auto"
               >
                 <Image
                   src={item.image}
                   alt={`Stat ${index + 1}`}
                   width={200}
                   height={200}
-                  className="rounded-xl"
+                  className="rounded-xl w-full h-auto"
                 />
-                <p className="mt-4 text-lg font-semibold text-gray-700 text-center">
+                <p className="mt-4 text-base sm:text-lg font-semibold text-gray-700 text-center">
                   {item.text}
                 </p>
               </div>
@@ -79,14 +85,14 @@ const AboutUs = () => {
           </div>
         </div>
 
-        <div className="min-w-full mt-5 py-12 flex flex-col items-center">
-          <h2 className="text-3xl font-bold text-gray-800 mb-10">
+        <div className="w-full mt-10 py-12 flex flex-col items-center px-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-10 text-center">
             Growing Better Together
           </h2>
           <AboutSlider />
         </div>
-
       </div>
+
       <Footer />
     </>
   );

@@ -32,7 +32,6 @@ function ProductDetail({ product }: ProductDetailProps) {
 
   const handleAddToCart = () => {
     if (isInCart) {
-      // Remove from cart
       removeFromCart(product.id);
 
       toast({
@@ -41,7 +40,6 @@ function ProductDetail({ product }: ProductDetailProps) {
         duration: 3000,
       });
     } else {
-      // Add to cart
       addToCart({
         id: product.id,
         title: product.title,
@@ -68,7 +66,6 @@ function ProductDetail({ product }: ProductDetailProps) {
         duration: 3000,
       });
     } else {
-      // Add to cart
       addToFav({
         id: product.id,
         title: product.title,
@@ -84,15 +81,14 @@ function ProductDetail({ product }: ProductDetailProps) {
     }
   };
   return (
-    <div className="w-screen max-w-5xl mx-auto">
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       <Button variant="outline" onClick={() => router.back()} className="mb-6">
         ← Back to Products
       </Button>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Product Images */}
         <div>
-          <div className="relative aspect-square rounded-lg overflow-hidden mb-4">
+          <div className="relative aspect-square max-h-[400px] sm:max-h-[500px] rounded-lg overflow-hidden mb-4">
             <Image
               src={mainImage}
               alt={product.title}
@@ -118,11 +114,7 @@ function ProductDetail({ product }: ProductDetailProps) {
           </div>
           <div className="flex mt-4 gap-2">
             <Button onClick={handleAddToFav}>
-                        {isInFav ? (
-                          <Heart color="red" size={18} />
-                        ) : (
-                          <Heart size={18} />
-                        )}
+              {isInFav ? <Heart color="red" size={18} /> : <Heart size={18} />}
             </Button>
             <Button
               disabled={product.stock === 0}

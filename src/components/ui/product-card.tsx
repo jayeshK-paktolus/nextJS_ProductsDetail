@@ -7,6 +7,12 @@ import { Heart, ShoppingCart, Check } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import { useFav } from "@/app/context/FavContext";
 import { toast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Product = {
   id: number;
@@ -62,8 +68,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Link href={`/products/${product.id}`} key={product.id} className="block">
-      <Card className="hover:shadow-lg transition-transform transform hover:-translate-y-1 flex flex-col w-full max-w-sm mx-auto">
-        {/* Image container with aspect ratio for responsiveness */}
+      <Card className="hover:shadow-lg transition-transform transform hover:-translate-y-1 flex flex-col w-full max-w-md mx-auto">
         <div className="relative w-full aspect-square overflow-hidden rounded-t-lg bg-gray-200">
           <Image
             src={product.thumbnail}
@@ -76,34 +81,43 @@ const ProductCard = ({ product }: ProductCardProps) => {
           />
         </div>
 
-        {/* Title */}
-        <h3 className="font-semibold text-base sm:text-lg text-gray-900 mt-2 px-3 sm:px-4 line-clamp-2">
-          {product.title}
+        <h3 className="font-semibold text-base sm:text-lg text-gray-900 mt-2 px-3 sm:px-4">
+          {product.title.length > 10 ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="cursor-pointer">
+                    {product.title.substring(0, 10) + "..."}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{product.title}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            product.title
+          )}
         </h3>
 
-        {/* Bottom section */}
         <div className="p-3 sm:p-4 flex justify-between items-center flex-1">
-          <p className="font-bold text-orange-600 text-sm sm:text-lg">
+          <p className=" text-orange-600 text-sm sm:text-lg">
             ${product.price}
           </p>
 
-          <div className="flex space-x-2">
-            {/* Favorite */}
+          <div className="flex space-x-1">
             <button
               className="w-9 h-9 sm:w-10 sm:h-10 flex rounded-full items-center justify-center transition bg-white shadow hover:bg-gray-100"
               onClick={handleFavToggle}
             >
-              {isInFav ? (
-                <Heart color="red" size={18} />
-              ) : (
-                <Heart size={18} />
-              )}
+              {isInFav ? <Heart color="red" size={18} /> : <Heart size={18} />}
             </button>
 
-            {/* Cart */}
             <button
               className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${
-                isInCart ? "bg-green-500 text-white" : "bg-orange-400 text-white"
+                isInCart
+                  ? "bg-green-500 text-white"
+                  : "bg-orange-400 text-white"
               } flex items-center justify-center shadow hover:opacity-90 transition`}
               onClick={handleCartToggle}
             >

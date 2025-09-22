@@ -24,8 +24,11 @@ function Layout({ children }: { children: ReactNode }) {
   const [maxPrice, setMaxPrice] = useState<number>(
     parseInt(searchParams.get("max") || "2000")
   );
-  const [brand, setBrand] = useState(searchParams.get("brand") || "");
-  const [category, setCategory] = useState(searchParams.get("category") || "");
+  const [brand, setBrand] = useState<string>(searchParams.get("brand") || "");
+  const [category, setCategory] = useState<string>(
+    searchParams.get("category") || ""
+  );
+  const [showFilters, setShowFilters] = useState<boolean>(false);
 
   const handleFilterChange = useCallback(() => {
     const params = new URLSearchParams();
@@ -43,6 +46,10 @@ function Layout({ children }: { children: ReactNode }) {
     handleFilterChange();
   }, [handleFilterChange]);
 
+  const handleShowFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
   const clearAllFilters = () => {
     setYear("");
     setMinPrice(0);
@@ -54,8 +61,17 @@ function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <Navbar />
-      <div className="flex mt-16">
-        <aside className="w-1/5 bg-gray-100 min-h-screen p-4 space-y-4">
+      <div className="flex flex-col md:flex-row mt-16">
+        <div className="md:hidden flex justify-end px-4 mt-4">
+          <Button onClick={handleShowFilters}>
+            {showFilters ? "Hide Filters" : "show Filters"}
+          </Button>
+        </div>
+        <aside
+          className={`${
+            showFilters ? "block" : "hidden"
+          } md:block w-full md:w-1/5 bg-gray-100 p-4 space-y-4`}
+        >
           <h2 className="font-semibold text-lg">Filters</h2>
 
           <div className="flex items-center space-x-2">
@@ -105,7 +121,7 @@ function Layout({ children }: { children: ReactNode }) {
             </div>
             <div className="mt-6">
               {year && (
-                <Button  size="icon" onClick={() => setYear("")}>
+                <Button size="icon" onClick={() => setYear("")}>
                   &times;
                 </Button>
               )}
@@ -160,10 +176,7 @@ function Layout({ children }: { children: ReactNode }) {
             </div>
             <div className="mt-6">
               {brand && (
-                <Button
-                  size="icon"
-                  onClick={() => setBrand("")}
-                >
+                <Button size="icon" onClick={() => setBrand("")}>
                   &times;
                 </Button>
               )}
